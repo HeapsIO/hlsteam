@@ -2,7 +2,7 @@ LBITS := $(shell getconf LONG_BIT)
 
 UNAME := $(shell uname)
 
-CFLAGS = -Wall -O3 -I src -I native/include -fPIC -I ../sdk/public
+CFLAGS = -Wall -O3 -I src -I native/include -fPIC -I sdk/public/
 
 ifndef ARCH
 	ARCH = $(LBITS)
@@ -13,12 +13,13 @@ ifeq ($(UNAME),Darwin)
 OS=osx
 # universal lib in osx32 dir
 LIBARCH=32
+ARCH=
 else
 OS=linux
 CFLAGS += -std=c++0x
 endif
 
-LFLAGS = -lhl -lsteam_api -lstdc++ -L native/lib/$(OS)$(LIBARCH) -L ../sdk/redistributable_bin/$(OS)$(ARCH)
+LFLAGS = -lhl -lsteam_api -lstdc++ -L sdk/redistributable_bin/$(OS)$(ARCH)
 
 SRC = native/cloud.o native/common.o native/controller.o native/friends.o native/gameserver.o \
 	native/matchmaking.o native/networking.o native/stats.o native/ugc.o
@@ -29,12 +30,12 @@ all: ${SRC}
 install:
 	cp steam.hdll /usr/lib
 	cp native/lib/$(OS)$(ARCH)/libsteam_api.* /usr/lib
-	
+
 .SUFFIXES : .cpp .o
 
 .cpp.o :
 	${CC} ${CFLAGS} -o $@ -c $<
-	
+
 clean_o:
 	rm -f ${SRC}
 

@@ -85,7 +85,7 @@ HL_PRIM void HL_NAME(gameserver_setup)( vclosure *onGlobalEvent ){
 }
 
 bool HL_NAME(gameserver_init)( int ip, int port, int gameport, int queryport, int serverMode, char *version ) {
-	return SteamGameServer_Init(ip,port,gameport,queryport,(EServerMode)serverMode, version);
+	return SteamGameServer_Init(ip, gameport, queryport, (EServerMode)serverMode, version);
 }
 
 void HL_NAME(gameserver_runcallbacks)() {
@@ -101,7 +101,7 @@ void HL_NAME(gameserver_logon_anonymous)() {
 }
 
 void HL_NAME(gameserver_enable_heartbeats)( bool b ) {
-	SteamGameServer()->EnableHeartbeats(b);
+	SteamGameServer()->SetAdvertiseServerActive(b);
 }
 
 void HL_NAME(gameserver_config)( char *modDir, char *product, char *desc ) {
@@ -123,8 +123,8 @@ vuid HL_NAME(gameserver_get_steam_id)() {
 	return hl_of_uid(SteamGameServer()->GetSteamID());
 }
 
-int HL_NAME(gameserver_get_public_ip)() {
-	return (int)SteamGameServer()->GetPublicIP();
+SteamIPAddress_t HL_NAME(gameserver_get_public_ip)() {
+	return (SteamIPAddress_t)SteamGameServer()->GetPublicIP();
 }
 
 DEFINE_PRIM(_BOOL, gameserver_init, _I32 _I32 _I32 _I32 _I32 _BYTES);
