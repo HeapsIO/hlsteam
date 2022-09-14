@@ -2,24 +2,38 @@ LBITS := $(shell getconf LONG_BIT)
 
 UNAME := $(shell uname)
 
-CFLAGS = -Wall -O3 -I src -I native/include -fPIC -I sdk/public/
+CFLAGS = -Wall -O3 -I src -I include -L lib -fPIC -I sdk/public/
 
 ifndef ARCH
 	ARCH = $(LBITS)
 endif
 
+SDKPATH=
+STEAMAPILIB=
+
+OS=$(UNAME)
 LIBARCH=$(ARCH)
-ifeq ($(UNAME),Darwin)
-OS=osx
-# universal lib in osx32 dir
-LIBARCH=32
-ARCH=
+
+ifeq (${OS},Darwin)
+	OS=osx
+	ARCH=
+	SDKPATH=sdk/redistributable_bin/osx
+	LFLAGS+=-lsteam_api
+	STEAMAPILIB=steam_api
+else ifeq (${OS},Linux)
+	CFLAGS += -std=c++0x
+	LFLAGS+=-lsteam_api
+	SDKPATH=sdk/redistributable_bin/linux${ARCH}
+	STEAMAPILIB=steam_api
 else
-OS=linux
-CFLAGS += -std=c++0x
+	OS=win
+	ARCH=64
+	LIBARCH=64
+	SDKPATH=sdk/redistributable_bin/win64
+	STEAMAPILIB=steam_api64
 endif
 
-LFLAGS = -lhl -lsteam_api -lstdc++ -L sdk/redistributable_bin/$(OS)$(ARCH)
+LFLAGS = -lhl -lstdc++ -L ${SDKPATH} -l ${STEAMAPILIB}
 
 SRC = native/cloud.o native/common.o native/controller.o native/friends.o native/gameserver.o \
 	native/matchmaking.o native/networking.o native/stats.o native/ugc.o
@@ -29,7 +43,6 @@ all: ${SRC}
 
 install:
 	cp steam.hdll /usr/lib
-	cp native/lib/$(OS)$(ARCH)/libsteam_api.* /usr/lib
 
 .SUFFIXES : .cpp .o
 
@@ -41,4 +54,3 @@ clean_o:
 
 clean: clean_o
 	rm -f steam.hdll
-
