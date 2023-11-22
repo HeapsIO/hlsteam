@@ -298,6 +298,12 @@ class Api
 		return _IsSteamInBigPictureMode();
 	}
 
+	public static function issSteamRunningOnSteamDeck() {
+		if (!active)
+			return false;
+		return _IsSteamRunningOnSteamDeck();
+	}
+
 	public static function isSteamRunning() {
 		if (!active)
 			return false;
@@ -530,6 +536,7 @@ class Api
 	@:hlNative("steam","is_overlay_enabled") private static function _IsOverlayEnabled() : Bool { return false; }
 	@:hlNative("steam","boverlay_needs_present") private static function _BOverlayNeedsPresent() : Bool { return false; }
 	@:hlNative("steam","is_steam_in_big_picture_mode") private static function _IsSteamInBigPictureMode() : Bool { return false; }
+	@:hlNative("?steam","is_steam_running_on_steam_deck") private static function _IsSteamRunningOnSteamDeck() : Bool { return false; }
 	@:hlNative("steam","is_steam_running") private static function _IsSteamRunning() : Bool { return false; }
 	@:hlNative("steam","get_current_game_language") private static function _GetCurrentGameLanguage() : hl.Bytes { return null; }
 	@:hlNative("steam","get_auth_ticket") private static function _GetAuthTicket( size : hl.Ref<Int>, authTicket : hl.Ref<Int> ) : hl.Bytes { return null; }

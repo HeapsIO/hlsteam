@@ -168,6 +168,10 @@ HL_PRIM bool HL_NAME(is_steam_in_big_picture_mode)(){
 	return SteamUtils()->IsSteamInBigPictureMode();
 }
 
+HL_PRIM bool HL_NAME(is_steam_running_on_steam_deck)(){
+	return SteamUtils()->IsSteamRunningOnSteamDeck();
+}
+
 HL_PRIM bool HL_NAME(is_steam_running)(){
 	return SteamAPI_IsSteamRunning();
 }
@@ -340,6 +344,7 @@ DEFINE_PRIM(_BOOL, is_dlc_installed, _I32);
 DEFINE_PRIM(_BYTES, get_app_install_dir, _I32);
 DEFINE_PRIM(_BOOL, boverlay_needs_present, _NO_ARG);
 DEFINE_PRIM(_BOOL, is_steam_in_big_picture_mode, _NO_ARG);
+DEFINE_PRIM(_BOOL, is_steam_running_on_steam_deck, _NO_ARG);
 DEFINE_PRIM(_BOOL, is_steam_running, _NO_ARG);
 DEFINE_PRIM(_BYTES, get_current_game_language, _NO_ARG);
 DEFINE_PRIM(_BYTES, get_auth_ticket, _REF(_I32) _REF(_I32));
