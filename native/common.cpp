@@ -208,7 +208,7 @@ vdynamic *CallbackHandler::EncodeAuthSessionTicketResponse(GetAuthSessionTicketR
 
 HL_PRIM vbyte *HL_NAME(get_auth_ticket)( int *size, int *authTicket ) {
 	vbyte *ticket = hl_alloc_bytes(1024);
-	*authTicket = SteamUser()->GetAuthSessionTicket(ticket,1024,(uint32*)size);
+	*authTicket = SteamUser()->GetAuthSessionTicket(ticket,1024,(uint32*)size, NULL);
 	return ticket;
 }
 

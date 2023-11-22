@@ -2,7 +2,7 @@ LBITS := $(shell getconf LONG_BIT)
 
 UNAME := $(shell uname)
 
-CFLAGS = -Wall -O3 -I src -I native/include -fPIC -I ../sdk/public
+CFLAGS = -Wall -O3 -I src -fPIC -I sdk/public -I $(HASHLINK_SRC)/src
 
 ifndef ARCH
 	ARCH = $(LBITS)

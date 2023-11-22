@@ -37,34 +37,34 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{790A6ECF-AEBA-48EB-BB22-6420079DFAFC}</ProjectGuid>
     <RootNamespace>hlsteam</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>steam</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseVS2013|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseVS2017|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -79,7 +79,7 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseVS2013|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -127,42 +127,42 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetExt>.hdll</TargetExt>
-    <IncludePath>sdk/public;%HASHLINK_SRC%/src;$(IncludePath)</IncludePath>
-    <LibraryPath>sdk/redistributable_bin;%HASHLINK_SRC%/$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>sdk/public;$(HASHLINK_SRC)/src;$(IncludePath)</IncludePath>
+    <LibraryPath>sdk/redistributable_bin;$(HASHLINK_SRC)/$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <TargetExt>.hdll</TargetExt>
-    <IncludePath>sdk/public;%HASHLINK_SRC%/src;$(IncludePath)</IncludePath>
-    <LibraryPath>sdk/redistributable_bin;%HASHLINK_SRC%/$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>sdk/public;$(HASHLINK_SRC)/src;$(IncludePath)</IncludePath>
+    <LibraryPath>sdk/redistributable_bin;$(HASHLINK_SRC)/$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseVS2013|Win32'">
     <TargetExt>.hdll</TargetExt>
-    <IncludePath>sdk/public;%HASHLINK_SRC%/src;$(IncludePath)</IncludePath>
-    <LibraryPath>sdk/redistributable_bin;%HASHLINK_SRC%/$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>sdk/public;$(HASHLINK_SRC)/src;$(IncludePath)</IncludePath>
+    <LibraryPath>sdk/redistributable_bin;$(HASHLINK_SRC)/$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseVS2017|Win32'">
     <TargetExt>.hdll</TargetExt>
-    <IncludePath>sdk/public;%HASHLINK_SRC%/src;$(IncludePath)</IncludePath>
-    <LibraryPath>sdk/redistributable_bin;%HASHLINK_SRC%/$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>sdk/public;$(HASHLINK_SRC)/src;$(IncludePath)</IncludePath>
+    <LibraryPath>sdk/redistributable_bin;$(HASHLINK_SRC)/$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LibraryPath>sdk/redistributable_bin/win64;%HASHLINK_SRC%/x64/$(Configuration);$(LibraryPath)</LibraryPath>
-    <IncludePath>sdk/public;%HASHLINK_SRC%/src;$(IncludePath)</IncludePath>
+    <LibraryPath>sdk/redistributable_bin/win64;$(HASHLINK_SRC)/x64/$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>sdk/public;$(HASHLINK_SRC)/src;$(IncludePath)</IncludePath>
     <TargetExt>.hdll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LibraryPath>sdk/redistributable_bin/win64;%HASHLINK_SRC%/x64/$(Configuration);$(LibraryPath)</LibraryPath>
-    <IncludePath>sdk/public;%HASHLINK_SRC%/src;$(IncludePath)</IncludePath>
+    <LibraryPath>sdk/redistributable_bin/win64;$(HASHLINK_SRC)/x64/$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>sdk/public;$(HASHLINK_SRC)/src;$(IncludePath)</IncludePath>
     <TargetExt>.hdll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseVS2013|x64'">
-    <LibraryPath>sdk/redistributable_bin/win64;%HASHLINK_SRC%/x64/$(Configuration);$(LibraryPath)</LibraryPath>
-    <IncludePath>sdk/public;%HASHLINK_SRC%/src;$(IncludePath)</IncludePath>
+    <LibraryPath>sdk/redistributable_bin/win64;$(HASHLINK_SRC)/x64/$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>sdk/public;$(HASHLINK_SRC)/src;$(IncludePath)</IncludePath>
     <TargetExt>.hdll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseVS2017|x64'">
-    <LibraryPath>sdk/redistributable_bin/win64;%HASHLINK_SRC%/x64/$(Configuration);$(LibraryPath)</LibraryPath>
-    <IncludePath>sdk/public;%HASHLINK_SRC%/src;$(IncludePath)</IncludePath>
+    <LibraryPath>sdk/redistributable_bin/win64;$(HASHLINK_SRC)/x64/$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>sdk/public;$(HASHLINK_SRC)/src;$(IncludePath)</IncludePath>
     <TargetExt>.hdll</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
