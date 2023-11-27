@@ -2,20 +2,14 @@ LBITS := $(shell getconf LONG_BIT)
 
 UNAME := $(shell uname)
 
-CFLAGS = -Wall -O3 -I src -fPIC -I sdk/public -I $(HASHLINK_SRC)/src
+CFLAGS = -Wall -O3 -fPIC -I sdk/public -I $(HASHLINK_SRC)/src -std=c++0x
 
-ifndef ARCH
-	ARCH = $(LBITS)
-endif
-
-LIBARCH=$(ARCH)
 ifeq ($(UNAME),Darwin)
 OS=osx
-# universal lib in osx32 dir
-LIBARCH=32
+ARCH=
 else
 OS=linux
-CFLAGS += -std=c++0x
+ARCH=$(LBITS)
 endif
 
 LFLAGS = -lhl -lsteam_api -lstdc++ -L sdk/redistributable_bin/$(OS)$(ARCH)
