@@ -2,10 +2,13 @@ hlsteam
 -------
 Simple Haxe wrapper of Steam API for Hashlink.
 
-### Windows Setup
+### Setup
 
 - Put your steam sdk in the hlsteam/sdk folder
-- Define HASHLINK_SRC env var to point to your `hashlink` directory
+- Define `HASHLINK_SRC` env var to point to your `hashlink` directory
+- Compile `steam.hdll`
+  - Windows use `hlsteam.sln`
+  - Linux/MacOS: run `make`
 
 #### Current Features:
 
