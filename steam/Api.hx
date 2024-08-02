@@ -553,23 +553,25 @@ class LeaderboardScore {
 	public var detail:Int;
 	public var rank:Int;
 	public var userName:String;
+	public var entriesCount:Int;
 
-	public function new(leaderboardId_:String, score_:Int, detail_:Int, rank_:Int=-1, userName_:String=null) {
+	public function new(leaderboardId_:String, score_:Int, detail_:Int, rank_:Int=-1, userName_:String=null, entriesCount_:Int=0) {
 		leaderboardId = leaderboardId_;
 		score = score_;
 		detail = detail_;
 		rank = rank_;
 		userName = userName_;
+		entriesCount = entriesCount_;
 	}
 
 	public function toString():String {
-		return leaderboardId + "," + score + "," + detail + "," + rank + "," + userName;
+		return leaderboardId + "," + score + "," + detail + "," + rank + "," + userName + "," + entriesCount;
 	}
 
 	public static function fromString(str:String):LeaderboardScore {
 		var tokens = str.split(",");
-		if (tokens.length == 5)
-			return new LeaderboardScore(tokens[0], Util.str2Int(tokens[1]), Util.str2Int(tokens[2]), Util.str2Int(tokens[3]), tokens[4]);
+		if (tokens.length == 6)
+			return new LeaderboardScore(tokens[0], Util.str2Int(tokens[1]), Util.str2Int(tokens[2]), Util.str2Int(tokens[3]), tokens[4], Util.str2Int(tokens[5]));
 		else
 			return null;
 	}

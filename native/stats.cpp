@@ -43,16 +43,16 @@ bool CallbackHandler::UploadScore(const std::string& leaderboardId, int score, i
 }
 
 
-static std::string toLeaderboardScore(const char* leaderboardName, int score, int detail, int rank, std::string userName){
+static std::string toLeaderboardScore(const char* leaderboardName, int score, int detail, int rank, std::string userName, int numEntries){
 	std::ostringstream data;
-	data << leaderboardName << "," << score << "," << detail << "," << rank << "," << userName;
+	data << leaderboardName << "," << score << "," << detail << "," << rank << "," << userName << "," << numEntries;
 	return data.str();
 }
 
 void CallbackHandler::OnScoreUploaded(LeaderboardScoreUploaded_t *pCallback, bool bIOFailure){
 	if (pCallback->m_bSuccess && !bIOFailure){
 		std::string leaderboardName = SteamUserStats()->GetLeaderboardName(pCallback->m_hSteamLeaderboard);
-		std::string data = toLeaderboardScore(SteamUserStats()->GetLeaderboardName(pCallback->m_hSteamLeaderboard), pCallback->m_nScore, -1, pCallback->m_nGlobalRankNew, "");
+		std::string data = toLeaderboardScore(SteamUserStats()->GetLeaderboardName(pCallback->m_hSteamLeaderboard), pCallback->m_nScore, -1, pCallback->m_nGlobalRankNew, "", 1);
 		SendEvent(ScoreUploaded, true, data.c_str());
 	}else if (pCallback != NULL && pCallback->m_hSteamLeaderboard != 0) {
 		SendEvent(ScoreUploaded, false, SteamUserStats()->GetLeaderboardName(pCallback->m_hSteamLeaderboard));
@@ -98,14 +98,14 @@ void CallbackHandler::OnScoreDownloaded(LeaderboardScoresDownloaded_t *pCallback
 
 		std::string userName = SteamFriends()->GetFriendPersonaName(entry.m_steamIDUser);
 
-		data << toLeaderboardScore(leaderboardId.c_str(), entry.m_nScore, details[0], entry.m_nGlobalRank, userName).c_str();
+		data << toLeaderboardScore(leaderboardId.c_str(), entry.m_nScore, details[0], entry.m_nGlobalRank, userName, numEntries).c_str();
 		haveData = true;
 	}
 
 	if (haveData)
 		SendEvent(ScoreDownloaded, true, data.str().c_str());
 	else
-		SendEvent(ScoreDownloaded, true, toLeaderboardScore(leaderboardId.c_str(), -1, -1, -1, "").c_str());
+		SendEvent(ScoreDownloaded, true, toLeaderboardScore(leaderboardId.c_str(), -1, -1, -1, "", 0).c_str());
 }
 
 void CallbackHandler::RequestGlobalStats(){
