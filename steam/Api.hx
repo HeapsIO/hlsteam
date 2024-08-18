@@ -495,7 +495,7 @@ class Api
 				if (success) {
 					var scores = data.split(";");
 					for (score in scores) {
-						var score = LeaderboardScore.fromString(data);
+						var score = LeaderboardScore.fromString(score);
 						if (score != null && whenLeaderboardScoreDownloaded != null) whenLeaderboardScoreDownloaded(score);
 					}
 				}
