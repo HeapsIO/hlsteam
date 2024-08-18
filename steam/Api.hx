@@ -7,7 +7,7 @@ private enum LeaderboardOp
 {
 	FIND(id:String);
 	UPLOAD(score:LeaderboardScore);
-	DOWNLOAD(id:String);
+	DOWNLOAD(download:LeaderboardDownload);
 }
 
 enum abstract SteamNotificationPosition(Int) to Int
@@ -151,11 +151,11 @@ class Api
 		return active && report("clearAchievement", [id], _ClearAchievement(@:privateAccess id.toUtf8()));
 	}
 
-	public static function downloadLeaderboardScore(id:String):Bool {
+	public static function downloadLeaderboardScore(leaderboardDownload:LeaderboardDownload):Bool {
 		if (!active) return false;
 		var startProcessingNow = (leaderboardOps.length == 0);
-		findLeaderboardIfNecessary(id);
-		leaderboardOps.add(LeaderboardOp.DOWNLOAD(id));
+		findLeaderboardIfNecessary(leaderboardDownload.leaderboardId);
+		leaderboardOps.add(LeaderboardOp.DOWNLOAD(leaderboardDownload));
 		if (startProcessingNow) processNextLeaderboardOp();
 		return true;
 	}
@@ -445,8 +445,8 @@ class Api
 			case UPLOAD(score):
 				if (!report("Leaderboard.UPLOAD", [score.toString()], _UploadScore(@:privateAccess score.leaderboardId.toUtf8(), score.score, score.detail)))
 					processNextLeaderboardOp();
-			case DOWNLOAD(id):
-				if (!report("Leaderboard.DOWNLOAD", [id], _DownloadScores(@:privateAccess id.toUtf8(), 0, 0)))
+			case DOWNLOAD(lb):
+				if (!report("Leaderboard.DOWNLOAD", [lb.toString()], _DownloadScores(@:privateAccess lb.leaderboardId.toUtf8(), lb.before, lb.after)))
 					processNextLeaderboardOp();
 		}
 	}
@@ -495,7 +495,7 @@ class Api
 				if (success) {
 					var scores = data.split(";");
 					for (score in scores) {
-						var score = LeaderboardScore.fromString(data);
+						var score = LeaderboardScore.fromString(score);
 						if (score != null && whenLeaderboardScoreDownloaded != null) whenLeaderboardScoreDownloaded(score);
 					}
 				}
@@ -552,24 +552,44 @@ class LeaderboardScore {
 	public var score:Int;
 	public var detail:Int;
 	public var rank:Int;
+	public var userName:String;
+	public var entriesCount:Int;
 
-	public function new(leaderboardId_:String, score_:Int, detail_:Int, rank_:Int=-1) {
+	public function new(leaderboardId_:String, score_:Int, detail_:Int, rank_:Int=-1, userName_:String=null, entriesCount_:Int=0) {
 		leaderboardId = leaderboardId_;
 		score = score_;
 		detail = detail_;
 		rank = rank_;
+		userName = userName_;
+		entriesCount = entriesCount_;
 	}
 
 	public function toString():String {
-		return leaderboardId + "," + score + "," + detail + "," + rank;
+		return leaderboardId + "," + score + "," + detail + "," + rank + "," + userName + "," + entriesCount;
 	}
 
 	public static function fromString(str:String):LeaderboardScore {
 		var tokens = str.split(",");
-		if (tokens.length == 4)
-			return new LeaderboardScore(tokens[0], Util.str2Int(tokens[1]), Util.str2Int(tokens[2]), Util.str2Int(tokens[3]));
+		if (tokens.length == 6)
+			return new LeaderboardScore(tokens[0], Util.str2Int(tokens[1]), Util.str2Int(tokens[2]), Util.str2Int(tokens[3]), tokens[4], Util.str2Int(tokens[5]));
 		else
 			return null;
+	}
+}
+
+class LeaderboardDownload {
+    public var leaderboardId:String;
+    public var before:Int;
+    public var after:Int;
+
+    public function new(leaderboardId_:String, before_:Int = 0, after_:Int = 0) {
+		leaderboardId = leaderboardId_;
+		before = before_;
+		after = after_;
+	}
+
+	public function toString():String {
+		return leaderboardId + "," + before + "," + after;
 	}
 }
 
