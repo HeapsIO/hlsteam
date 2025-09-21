@@ -2,6 +2,7 @@
 EVENT_DECL( PersonaChange, PersonaStateChange_t )
 EVENT_DECL( OverlayActivated, GameOverlayActivated_t )
 EVENT_DECL( AuthSessionTicketResponse, GetAuthSessionTicketResponse_t )
+EVENT_DECL( NewUrlLaunchParameters, NewUrlLaunchParameters_t )
 
 // matchmaking
 EVENT_DECL( LobbyData, LobbyDataUpdate_t )
