@@ -176,6 +176,11 @@ HL_PRIM bool HL_NAME(is_steam_running)(){
 	return SteamAPI_IsSteamRunning();
 }
 
+HL_PRIM bool HL_NAME(show_floating_gamepad_text_input)(EFloatingGamepadTextInputMode eKeyboardMode, int nTextFieldXPosition, int nTextFieldYPosition, int nTextFieldWidth, int nTextFieldHeight) {
+	if (!CheckInit()) return false;
+	return SteamUtils()->ShowFloatingGamepadTextInput(eKeyboardMode, nTextFieldXPosition, nTextFieldYPosition, nTextFieldWidth, nTextFieldHeight);
+}
+
 HL_PRIM vbyte *HL_NAME(get_current_game_language)(){
 	if (!CheckInit()) return NULL;
 	return (vbyte*)SteamApps()->GetCurrentGameLanguage();
@@ -346,6 +351,7 @@ DEFINE_PRIM(_BOOL, boverlay_needs_present, _NO_ARG);
 DEFINE_PRIM(_BOOL, is_steam_in_big_picture_mode, _NO_ARG);
 DEFINE_PRIM(_BOOL, is_steam_running_on_steam_deck, _NO_ARG);
 DEFINE_PRIM(_BOOL, is_steam_running, _NO_ARG);
+DEFINE_PRIM(_BOOL, show_floating_gamepad_text_input, _I32 _I32 _I32 _I32 _I32);
 DEFINE_PRIM(_BYTES, get_current_game_language, _NO_ARG);
 DEFINE_PRIM(_BYTES, get_auth_ticket, _REF(_I32) _REF(_I32));
 DEFINE_PRIM(_VOID, request_encrypted_app_ticket, _BYTES _I32 _FUN(_VOID, _BYTES _I32));

@@ -18,6 +18,23 @@ enum abstract SteamNotificationPosition(Int) to Int
 	var BottomRight = 3;
 }
 
+enum abstract GamepadTextInputMode(Int) to Int {
+	var Normal = 0;
+	var Password = 1;
+}
+
+enum abstract GamepadTextInputLineMode(Int) to Int {
+	var SingleLine = 0;
+	var MultipleLines = 1;
+}
+
+enum abstract FloatingGamepadTextInputMode(Int) to Int {
+	var SingleLine = 0;
+	var MultipleLines = 1;
+	var Email = 2;
+	var Numeric = 3;
+}
+
 typedef ControllerHandle = Int64;
 typedef ControllerActionSetHandle = Int;
 typedef ControllerDigitalActionHandle = Int;
@@ -309,6 +326,12 @@ class Api
 		return _IsSteamRunning();
 	}
 
+	public static function showFloatingGamepadTextInput(mode:FloatingGamepadTextInputMode, textFieldX:Int, textFieldY:Int, textFieldWidth:Int, textFieldHeight:Int) {
+		if (!active)
+			return false;
+		return _ShowFloatingGamepadTextInput(mode, textFieldX, textFieldY, textFieldWidth, textFieldHeight);
+	}
+
 	public static function openOverlay(url:String) {
 		if (!active) return;
 		_OpenOverlay(@:privateAccess url.toUtf8());
@@ -537,6 +560,7 @@ class Api
 	@:hlNative("steam","is_steam_in_big_picture_mode") private static function _IsSteamInBigPictureMode() : Bool { return false; }
 	@:hlNative("?steam","is_steam_running_on_steam_deck") private static function _IsSteamRunningOnSteamDeck() : Bool { return false; }
 	@:hlNative("steam","is_steam_running") private static function _IsSteamRunning() : Bool { return false; }
+	@:hlNative("steam", "show_floating_gamepad_text_input") private static function _ShowFloatingGamepadTextInput(mode:Int, textFieldX:Int, textFieldY:Int, textFieldWidth:Int, textFieldHeight:Int):Bool return false;
 	@:hlNative("steam","get_current_game_language") private static function _GetCurrentGameLanguage() : hl.Bytes { return null; }
 	@:hlNative("steam","get_auth_ticket") private static function _GetAuthTicket( size : hl.Ref<Int>, authTicket : hl.Ref<Int> ) : hl.Bytes { return null; }
 	@:hlNative("?steam","request_encrypted_app_ticket") private static function _RequestEncryptedAppTicket( data : hl.Bytes, size : Int, encryptedAppTicket : (hl.Bytes, Int) -> Void ) : Void { return; }
