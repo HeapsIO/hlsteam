@@ -2,7 +2,9 @@
 
 vdynamic *CallbackHandler::EncodeDownloadItem(DownloadItemResult_t *d) {
 	HLValue v;
+	v.Set("appId", d->m_unAppID);
 	v.Set("file", d->m_nPublishedFileId);
+	v.Set("result", (int)d->m_eResult);
 	return v.value;
 }
 

@@ -14,7 +14,7 @@ enum ItemState {
 class Item {
 
 	public var id : UID;
-	public static var downloadedCallbacks = new Array<Item->Void>();
+	public static var downloadedCallbacks = new Array<Item->Int->Void>();
 	public static var installedCallbacks = new Array<Item->Void>();
 
 	public static function fromInt( i : Int ){
@@ -23,13 +23,16 @@ class Item {
 		return new Item(steam.UID.fromBytes(b));
 	}
 
-	public static function init( onDownloaded : Item -> Void, onInstalled : Item -> Void ){
+	public static function init( onDownloaded : ( item:Item, result:Int ) -> Void, onInstalled : Item -> Void ){
 		downloadedCallbacks.push(onDownloaded);
 		installedCallbacks.push(onInstalled);
-		Api.registerGlobalEvent(3400 + 6, function(data:{file:UID}){
+		Api.registerGlobalEvent(3400 + 6, function(data:{appId:Int, file:UID, result:Int}){
+			if (data.appId != Api.appId)
+				return;
+
 			var item = new Item(data.file);
 			for( callback in downloadedCallbacks ){
-				callback(item);
+				callback(item, data.result);
 			}
 		});
 		Api.registerGlobalEvent(3400 + 5, function(data:{file:UID}){
