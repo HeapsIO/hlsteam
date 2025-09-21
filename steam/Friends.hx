@@ -92,11 +92,16 @@ class Friends {
 	public static function activateOverlay( overlay : OverlayKind, ?uid : UID ) {
 		activate_overlay_user( overlay == None ? null : @:privateAccess overlay.toString().toUtf8(), uid);
 	}
+
+	public static function setRichPresence(key:String, value:String) {
+		@:privateAccess set_rich_presence(key.toUtf8(), value.toUtf8());
+	}
 	
 	public static function activateOverlayStore( appId : Int, flags : OverlayToStoreFlag ) : Void {}
 
 	static function get_friends( flags : FriendFlags ) : hl.NativeArray<UID> { return null; }
 	static function has_friend( uid : UID, flags : FriendFlags ) : Bool { return false; }
 	static function activate_overlay_user( overlay : hl.Bytes, uid : UID ) : Void {}
+	static function set_rich_presence( pchKey:hl.Bytes, pchValue:hl.Bytes ) : Void {}
 
 }
