@@ -268,6 +268,24 @@ class Controller
 	}
 
 	/**
+	 * Synchronize API state with the latest Steam Input action data available. This
+	 * is performed automatically by SteamAPI_RunCallbacks, but for the absolute lowest
+	 * possible latency, you call this directly before reading controller state. 
+	 */ 
+	public inline function runFrame() {
+		_RunFrameControllers();
+	}
+
+	/**
+	 * Returns true if new data has been received since the last time action data was accessed
+	 * via GetDigitalActionData or GetAnalogActionData. The game will still need to call
+	 * runFrame() or SteamAPI_RunCallbacks() before this to update the data stream
+	 */
+	public inline function newDataAvailable() {
+		return _NewDataAvailableControllers();
+	}
+
+	/**
 	 * Trigger a haptic pulse in a slightly friendlier way
 	 * @param	controller	handle received from getConnectedControllers()
 	 * @param	targetPad	which pad you want to pulse
@@ -447,8 +465,10 @@ class Controller
 
 	private var customTrace:String->Void;
 
-	@:hlNative("steam","init_controllers") private static function _InitControllers() : Bool { return false; }
+	@:hlNative("steam","init_controllers") private static function _InitControllers( explicitlyCallRunFrame : Bool ) : Bool { return false; }
 	@:hlNative("steam","shutdown_controllers") private static function _ShutdownControllers() : Bool { return false; }
+	@:hlNative("steam","run_frame_controllers") private static function _RunFrameControllers() : Void{};
+	@:hlNative("steam","new_data_available_controllers") private static function _NewDataAvailableControllers() : Bool { return false; }
 	@:hlNative("steam","get_connected_controllers") private static function _GetConnectedControllers( arr : hl.NativeArray<Int> ) : hl.NativeArray<Int> { return null; }
 	@:hlNative("steam","get_digital_action_origins") private static function _GetDigitalActionOrigins( controller : Int, action : Int, digitalAction : Int ) : hl.NativeArray<Int> { return null; }
 	@:hlNative("steam","get_entered_gamepad_text_input") private static function _GetEnteredGamepadTextInput() : hl.Bytes { return null; }
@@ -485,13 +505,13 @@ class Controller
 		init();
 	}
 
-	private function init()
+	private function init(explicitlyCallRunFrame = false)
 	{
 		if (active) return;
 
 		// if we get this far, the dlls loaded ok and we need Steam controllers to init.
 		// otherwise, we're trying to run the Steam version without the Steam client
-		active = _InitControllers();
+		active = _InitControllers(explicitlyCallRunFrame);
 	}
 
 	private var max_controllers:Int = -1;
