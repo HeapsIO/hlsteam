@@ -176,6 +176,35 @@ HL_PRIM CClosureCallResult<GetAppDependenciesResult_t>* HL_NAME(get_app_dependen
 	return m_call;
 }
 
+HL_PRIM void HL_NAME(start_playtime_tracking)(varray *fileIDs){
+	if (!CheckInit()) return;
+
+	PublishedFileId_t * pvecPublishedFileID = new PublishedFileId_t[fileIDs->size];
+	vuid *ids = hl_aptr(fileIDs, vuid);
+	for (int i = 0; i < fileIDs->size; i++)
+		pvecPublishedFileID[i] = ids[i] ? hl_to_uint64(ids[i]) : 0;
+
+	SteamAPICall_t result = SteamUGC()->StartPlaytimeTracking(pvecPublishedFileID, fileIDs->size);
+	delete[] pvecPublishedFileID;
+}
+
+HL_PRIM void HL_NAME(stop_playtime_tracking)(varray *fileIDs){
+	if (!CheckInit()) return;
+
+	PublishedFileId_t * pvecPublishedFileID = new PublishedFileId_t[fileIDs->size];
+	vuid *ids = hl_aptr(fileIDs, vuid);
+	for (int i = 0; i < fileIDs->size; i++)
+		pvecPublishedFileID[i] = ids[i] ? hl_to_uint64(ids[i]) : 0;
+
+	SteamAPICall_t result = SteamUGC()->StopPlaytimeTracking(pvecPublishedFileID, fileIDs->size);
+	delete[] pvecPublishedFileID;
+}
+
+HL_PRIM void HL_NAME(stop_playtime_tracking_for_all_items)(){
+	if (!CheckInit()) return;
+	SteamAPICall_t result = SteamUGC()->StopPlaytimeTrackingForAllItems();
+}
+
 DEFINE_PRIM(_ARR, get_subscribed_items, _NO_ARG);
 DEFINE_PRIM(_I32, get_item_state, _UID);
 DEFINE_PRIM(_BOOL, get_item_download_info, _UID _REF(_F64) _REF(_F64));
@@ -187,6 +216,9 @@ DEFINE_PRIM(_CRESULT, delete_item, _UID _CALLB(_I32));
 DEFINE_PRIM(_CRESULT, add_app_dependency, _UID _I32 _CALLB(_I32));
 DEFINE_PRIM(_CRESULT, remove_app_dependency, _UID _I32 _CALLB(_I32));
 DEFINE_PRIM(_CRESULT, get_app_dependencies, _UID _CALLB(_DYN));
+DEFINE_PRIM(_VOID, start_playtime_tracking, _ARR);
+DEFINE_PRIM(_VOID, stop_playtime_tracking, _ARR);
+DEFINE_PRIM(_VOID, stop_playtime_tracking_for_all_items, _NO_ARG);
 
 //-----------------------------------------------------------------------------------------------------------
 // UGC QUERY

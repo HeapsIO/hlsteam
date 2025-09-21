@@ -69,6 +69,24 @@ class Item {
 		return a == null ? null : [for( it in a ) new Item(it)];
 	}
 
+	public static function startPlaytimeTracking(ids:Array<Item>) {
+		var a = new hl.NativeArray(ids.length);
+		for( i in 0...ids.length )
+			a[i] = ids[i].id;
+		start_playtime_tracking(a);
+	}
+
+	public static function stopPlaytimeTracking(ids:Array<Item>) {
+		var a = new hl.NativeArray(ids.length);
+		for( i in 0...ids.length )
+			a[i] = ids[i].id;
+		stop_playtime_tracking(a);
+	}
+
+	public static function stopPlaytimeTrackingForAllItems() {
+		stop_playtime_tracking_for_all_items();
+	}
+
 	inline function new( b : UID ){
 		id = b;
 	}
@@ -180,6 +198,15 @@ class Item {
 	
 	static function get_app_dependencies( item : UID, cb : Callback<Dynamic> ) : AsyncCall {
 		return null;
+	}
+
+	static function start_playtime_tracking( ids : hl.NativeArray<UID> ) : Void {
+	}
+
+	static function stop_playtime_tracking( ids : hl.NativeArray<UID> ) : Void {
+	}
+
+	static function stop_playtime_tracking_for_all_items() : Void {
 	}
 
 }
