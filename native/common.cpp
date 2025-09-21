@@ -181,6 +181,22 @@ HL_PRIM vbyte *HL_NAME(get_current_game_language)(){
 	return (vbyte*)SteamApps()->GetCurrentGameLanguage();
 }
 
+HL_PRIM vbyte *HL_NAME(get_launch_command_line)(){
+	if (!CheckInit()) return NULL;
+	char *pszCommandLine = (char *)hl_gc_alloc_noptr(4096);
+	int size = SteamApps()->GetLaunchCommandLine(pszCommandLine, 4096);
+	return (vbyte*)pszCommandLine;
+}
+
+HL_PRIM vbyte *HL_NAME(get_launch_query_param)(vbyte *pchKey){
+	if (!CheckInit()) return NULL;
+	return (vbyte*)SteamApps()->GetLaunchQueryParam((char*)pchKey);
+}
+
+vdynamic *CallbackHandler::EncodeNewUrlLaunchParameters(NewUrlLaunchParameters_t *d) {
+	return NULL;
+}
+
 HL_PRIM bool HL_NAME(is_dlc_installed)( int appid ) {
 	return SteamApps()->BIsDlcInstalled((AppId_t)appid);
 }
@@ -347,6 +363,8 @@ DEFINE_PRIM(_BOOL, is_steam_in_big_picture_mode, _NO_ARG);
 DEFINE_PRIM(_BOOL, is_steam_running_on_steam_deck, _NO_ARG);
 DEFINE_PRIM(_BOOL, is_steam_running, _NO_ARG);
 DEFINE_PRIM(_BYTES, get_current_game_language, _NO_ARG);
+DEFINE_PRIM(_BYTES, get_launch_command_line, _NO_ARG);
+DEFINE_PRIM(_BYTES, get_launch_query_param, _BYTES);
 DEFINE_PRIM(_BYTES, get_auth_ticket, _REF(_I32) _REF(_I32));
 DEFINE_PRIM(_VOID, request_encrypted_app_ticket, _BYTES _I32 _FUN(_VOID, _BYTES _I32));
 DEFINE_PRIM(_VOID, cancel_call_result, _CRESULT);
