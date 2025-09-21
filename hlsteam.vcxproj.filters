@@ -9,6 +9,8 @@
     <ClCompile Include="native\cloud.cpp" />
     <ClCompile Include="native\friends.cpp" />
     <ClCompile Include="native\networking.cpp" />
+    <ClCompile Include="native\networkingmessages.cpp" />
+    <ClCompile Include="native\timeline.cpp" />
     <ClCompile Include="native\gameserver.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -15,7 +15,8 @@ endif
 LFLAGS = -lhl -lsteam_api -lstdc++ -L sdk/redistributable_bin/$(OS)$(ARCH)
 
 SRC = native/cloud.o native/common.o native/controller.o native/friends.o native/gameserver.o \
-	native/matchmaking.o native/networking.o native/stats.o native/ugc.o
+	native/matchmaking.o native/networking.o native/networkingmessages.o native/stats.o \
+	native/ugc.o
 
 all: ${SRC}
 	${CC} ${CFLAGS} -shared -o steam.hdll ${SRC} ${LFLAGS}

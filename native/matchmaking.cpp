@@ -156,6 +156,10 @@ HL_PRIM void HL_NAME(set_lobby_member_limit)( vuid uid, int count ) {
 	SteamMatchmaking()->SetLobbyMemberLimit(hl_to_uid(uid), count);
 }
 
+HL_PRIM void HL_NAME(set_lobby_type)( vuid uid, ELobbyType lobbyType ) {
+	SteamMatchmaking()->SetLobbyType(hl_to_uid(uid), lobbyType);
+}
+
 DEFINE_PRIM(_CRESULT, create_lobby, _I32 _I32 _CALLB(_UID));
 DEFINE_PRIM(_VOID, leave_lobby, _UID);
 DEFINE_PRIM(_CRESULT, join_lobby, _UID _CALLB(_BOOL));
@@ -164,6 +168,7 @@ DEFINE_PRIM(_I32, get_num_lobby_members, _UID);
 DEFINE_PRIM(_UID, get_lobby_member_by_index, _UID _I32);
 DEFINE_PRIM(_I32, get_lobby_member_limit, _UID);
 DEFINE_PRIM(_VOID, set_lobby_member_limit, _UID _I32);
+DEFINE_PRIM(_VOID, set_lobby_type, _UID _I32);
 
 DEFINE_PRIM(_UID, get_lobby_owner, _UID);
 DEFINE_PRIM(_VOID, lobby_invite_friends, _UID);

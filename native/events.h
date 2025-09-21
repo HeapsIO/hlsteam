@@ -12,6 +12,10 @@ EVENT_DECL( LobbyJoinRequest, GameLobbyJoinRequested_t )
 // networking
 EVENT_DECL( P2PSessionRequest, P2PSessionRequest_t )
 EVENT_DECL( P2PSessionConnectionFail, P2PSessionConnectFail_t )
+EVENT_DECL( SteamNetworkingMessagesSessionRequest, SteamNetworkingMessagesSessionRequest_t )
+EVENT_DECL( SteamNetworkingMessagesSessionFailed, SteamNetworkingMessagesSessionFailed_t )
+
+EVENT_DECL( GameRichPresenceJoinRequested, GameRichPresenceJoinRequested_t )
 
 // ugc
 EVENT_DECL(DownloadItem, DownloadItemResult_t)
