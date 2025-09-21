@@ -424,18 +424,15 @@ HL_PRIM vuid HL_NAME(ugc_item_start_update)(int id, vuid itemID) {
 }
 
 static void on_item_updated(vclosure *c, SubmitItemUpdateResult_t *result, bool error) {
-	if (!error && result->m_eResult == k_EResultOK) {
-		vdynamic d;
-		d.t = &hlt_bool;
-		d.v.b = result->m_bUserNeedsToAcceptWorkshopLegalAgreement;
-		dyn_call_result(c, &d, error);
-	}
-	else {
-		vdynamic d;
-		d.t = &hlt_i32;
-		d.v.i = result->m_eResult;
-		dyn_call_result(c, &d, true);
-	}
+	HLValue v;
+
+	v.Set("userNeedsLegalAgreement", result->m_bUserNeedsToAcceptWorkshopLegalAgreement);
+	v.Set("result", result->m_eResult);
+	
+	if (!error && result->m_eResult != k_EResultOK)
+		error = true;
+
+	dyn_call_result(c, v.value, error);
 }
 
 HL_PRIM CClosureCallResult<SubmitItemUpdateResult_t>* HL_NAME(ugc_item_submit_update)(vuid updateHandle, vbyte *changeNotes, vclosure *closure){
@@ -503,7 +500,7 @@ HL_PRIM bool HL_NAME(ugc_item_set_preview_image)(vuid updateHandle, vbyte *path)
 
 DEFINE_PRIM(_CRESULT, ugc_item_create, _I32 _CALLB(_DYN));
 DEFINE_PRIM(_UID, ugc_item_start_update, _I32 _UID);
-DEFINE_PRIM(_CRESULT, ugc_item_submit_update, _UID _BYTES _CALLB(_BOOL));
+DEFINE_PRIM(_CRESULT, ugc_item_submit_update, _UID _BYTES _CALLB(_DYN));
 DEFINE_PRIM(_BOOL, ugc_item_set_update_language, _UID _BYTES);
 DEFINE_PRIM(_BOOL, ugc_item_set_title, _UID _BYTES);
 DEFINE_PRIM(_BOOL, ugc_item_set_description, _UID _BYTES);
