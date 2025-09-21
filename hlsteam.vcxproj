@@ -283,6 +283,7 @@
     <ClCompile Include="native\gameserver.cpp" />
     <ClCompile Include="native\matchmaking.cpp" />
     <ClCompile Include="native\networking.cpp" />
+    <ClCompile Include="native\networkingmessages.cpp" />
     <ClCompile Include="native\stats.cpp" />
     <ClCompile Include="native\ugc.cpp" />
   </ItemGroup>
