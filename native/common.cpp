@@ -209,11 +209,25 @@ vdynamic *CallbackHandler::EncodeAuthSessionTicketResponse(GetAuthSessionTicketR
 	return ret.value;
 }
 
+vdynamic *CallbackHandler::EncodeTicketForWebApiResponse(GetTicketForWebApiResponse_t *d) {
+	vbyte *ticket = hl_copy_bytes(d->m_rgubTicket, d->m_cubTicket);
+	
+	HLValue ret;
+	ret.Set("authTicket", d->m_hAuthTicket);
+	ret.Set("result", d->m_eResult);
+	ret.Set("length", d->m_cubTicket);
+	hl_dyn_setp(ret.value, hl_hash_utf8("data"), &hlt_bytes, ticket);
+	return ret.value;
+}
 
 HL_PRIM vbyte *HL_NAME(get_auth_ticket)( int *size, int *authTicket ) {
 	vbyte *ticket = hl_alloc_bytes(1024);
 	*authTicket = SteamUser()->GetAuthSessionTicket(ticket,1024,(uint32*)size, NULL);
 	return ticket;
+}
+
+HL_PRIM int HL_NAME(get_auth_ticket_for_web_api)( vbyte* identity ) {
+	return SteamUser()->GetAuthTicketForWebApi((char *)identity);
 }
 
 HL_PRIM void HL_NAME(cancel_call_result)( CClosureCallResult<int> *m_call ) {
@@ -348,6 +362,7 @@ DEFINE_PRIM(_BOOL, is_steam_running_on_steam_deck, _NO_ARG);
 DEFINE_PRIM(_BOOL, is_steam_running, _NO_ARG);
 DEFINE_PRIM(_BYTES, get_current_game_language, _NO_ARG);
 DEFINE_PRIM(_BYTES, get_auth_ticket, _REF(_I32) _REF(_I32));
+DEFINE_PRIM(_I32, get_auth_ticket_for_web_api, _BYTES);
 DEFINE_PRIM(_VOID, request_encrypted_app_ticket, _BYTES _I32 _FUN(_VOID, _BYTES _I32));
 DEFINE_PRIM(_VOID, cancel_call_result, _CRESULT);
 DEFINE_PRIM(_BYTES, get_current_beta_name, _NO_ARG);
