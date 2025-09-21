@@ -403,6 +403,7 @@ static void on_item_created(vclosure *c, CreateItemResult_t *result, bool error)
 		HLValue v;
 		v.Set("id", result->m_nPublishedFileId);
 		v.Set("userNeedsLegalAgreement", result->m_bUserNeedsToAcceptWorkshopLegalAgreement);
+		v.Set("result", result->m_eResult);
 		dyn_call_result(c, v.value, error);
 	}
 	else {

@@ -40,13 +40,13 @@ class Item {
 		});
 	}
 
-	public static function create( appId : Int, cb : Null<Item> -> Bool -> Void ){
+	public static function create( appId : Int, cb : ( id:Null<Item>, needsAgreement:Bool, result:Int ) -> Void ){
 		ugc_item_create(appId,function(obj, error){
 			if( error ){
-				cb(null,false);
+				cb(null, false, obj.result);
 				return;
 			}
-			cb(new Item(obj.id), obj.userNeedsLegalAgreement);
+			cb(new Item(obj.id), obj.userNeedsLegalAgreement, obj.result);
 		});
 	}
 
