@@ -16,6 +16,7 @@ class Item {
 	public var id : UID;
 	public static var downloadedCallbacks = new Array<Item->Int->Void>();
 	public static var installedCallbacks = new Array<Item->Void>();
+	public static dynamic function subscribedItemsListChanged() {}
 
 	public static function fromInt( i : Int ){
 		var b = haxe.io.Bytes.alloc(8);
@@ -43,6 +44,13 @@ class Item {
 			for( callback in installedCallbacks ){
 				callback(item);
 			}
+		});
+
+		Api.registerGlobalEvent(3400 + 18, function(data:{appId:Int}){
+			if (data.appId != Api.appId)
+				return;
+
+			subscribedItemsListChanged();
 		});
 	}
 

@@ -15,6 +15,12 @@ vdynamic *CallbackHandler::EncodeItemInstalled(ItemInstalled_t *d) {
 	return v.value;
 }
 
+vdynamic *CallbackHandler::EncodeSubscribedItemsListChanged(UserSubscribedItemsListChanged_t *d) {
+	HLValue v;
+	v.Set("appId", d->m_nAppID);
+	return v.value;
+}
+
 HL_PRIM varray *HL_NAME(get_subscribed_items)(){
 	if (!CheckInit()) return NULL;
 
