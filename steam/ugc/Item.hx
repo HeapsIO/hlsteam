@@ -35,7 +35,10 @@ class Item {
 				callback(item, data.result);
 			}
 		});
-		Api.registerGlobalEvent(3400 + 5, function(data:{file:UID}){
+		Api.registerGlobalEvent(3400 + 5, function(data:{appId:Int, file:UID}){
+			if (data.appId != Api.appId)
+				return;
+
 			var item = new Item(data.file);
 			for( callback in installedCallbacks ){
 				callback(item);

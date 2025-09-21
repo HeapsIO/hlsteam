@@ -10,6 +10,7 @@ vdynamic *CallbackHandler::EncodeDownloadItem(DownloadItemResult_t *d) {
 
 vdynamic *CallbackHandler::EncodeItemInstalled(ItemInstalled_t *d) {
 	HLValue v;
+	v.Set("appId", d->m_unAppID);
 	v.Set("file", d->m_nPublishedFileId);
 	return v.value;
 }
