@@ -16,6 +16,7 @@ EVENT_DECL( P2PSessionConnectionFail, P2PSessionConnectFail_t )
 // ugc
 EVENT_DECL(DownloadItem, DownloadItemResult_t)
 EVENT_DECL(ItemInstalled, ItemInstalled_t)
+EVENT_DECL(SubscribedItemsListChanged, UserSubscribedItemsListChanged_t)
 
 // -------------- OLD EVENTS -----------------------
 #ifndef GLOBAL_EVENTS
