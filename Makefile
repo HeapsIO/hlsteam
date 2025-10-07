@@ -1,4 +1,5 @@
 LBITS := $(shell getconf LONG_BIT)
+INSTALL_PREFIX ?= /usr/local/lib
 
 UNAME := $(shell uname)
 
@@ -21,14 +22,14 @@ all: ${SRC}
 	${CC} ${CFLAGS} -shared -o steam.hdll ${SRC} ${LFLAGS}
 
 install:
-	cp steam.hdll /usr/lib
-	cp native/lib/$(OS)$(ARCH)/libsteam_api.* /usr/lib
-	
+	cp steam.hdll ${INSTALL_PREFIX}
+	cp native/lib/$(OS)$(ARCH)/libsteam_api.* ${INSTALL_PREFIX}
+
 .SUFFIXES : .cpp .o
 
 .cpp.o :
 	${CC} ${CFLAGS} -o $@ -c $<
-	
+
 clean_o:
 	rm -f ${SRC}
 
