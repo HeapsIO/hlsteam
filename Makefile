@@ -13,7 +13,8 @@ OS=linux
 ARCH=$(LBITS)
 endif
 
-LFLAGS = -lhl -lsteam_api -lstdc++ -L sdk/redistributable_bin/$(OS)$(ARCH)
+SDK_BIN_DIR = sdk/redistributable_bin/$(OS)$(ARCH)
+LFLAGS = -lhl -lsteam_api -lstdc++ -L $(SDK_BIN_DIR)
 
 SRC = native/cloud.o native/common.o native/controller.o native/friends.o native/gameserver.o \
 	native/matchmaking.o native/networking.o native/stats.o native/ugc.o
@@ -23,7 +24,10 @@ all: ${SRC}
 
 install:
 	cp steam.hdll ${INSTALL_PREFIX}
-	cp native/lib/$(OS)$(ARCH)/libsteam_api.* ${INSTALL_PREFIX}
+	cp $(SDK_BIN_DIR)/libsteam_api.* ${INSTALL_PREFIX}
+
+uninstall:
+	rm -f ${INSTALL_PREFIX}/steam.hdll ${INSTALL_PREFIX}/libsteam_api.*
 
 .SUFFIXES : .cpp .o
 
