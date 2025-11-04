@@ -257,6 +257,11 @@ HL_PRIM bool HL_NAME(is_subscribed_from_free_weekend)()
 	return SteamApps()->BIsSubscribedFromFreeWeekend();
 }
 
+HL_PRIM uint32 HL_NAME(get_earliest_purchase_unix_time)(int app_id)
+{
+	return SteamApps()->GetEarliestPurchaseUnixTime(app_id);
+}
+
 class EncryptedAppTicketRequest
 {
 private:
@@ -356,3 +361,4 @@ DEFINE_PRIM(_BOOL, is_app_owned, _I32);
 DEFINE_PRIM(_BOOL, is_subscribed, _NO_ARG);
 DEFINE_PRIM(_BOOL, is_subscribed_from_family_sharing, _NO_ARG);
 DEFINE_PRIM(_BOOL, is_subscribed_from_free_weekend, _NO_ARG);
+DEFINE_PRIM(_I32, get_earliest_purchase_unix_time, _I32);

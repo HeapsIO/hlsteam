@@ -545,6 +545,7 @@ class Api
 	@:hlNative("?steam","is_subscribed") public static function isSubscribed() : Bool { return false; }
 	@:hlNative("?steam","is_subscribed_from_family_sharing") public static function isSubscribedFromFamilySharing() : Bool { return false; }
 	@:hlNative("?steam","is_subscribed_from_free_weekend") public static function isSubscribedFromFreeWeekend() : Bool { return false; }
+	@:hlNative("?steam","get_earliest_purchase_unix_time") public static function getEarliestPurchaseUnixTime( appId : Int ) : Int { return 0; }
 }
 
 class LeaderboardScore {
