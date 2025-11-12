@@ -2,13 +2,22 @@
 
 vdynamic *CallbackHandler::EncodeDownloadItem(DownloadItemResult_t *d) {
 	HLValue v;
+	v.Set("appId", d->m_unAppID);
 	v.Set("file", d->m_nPublishedFileId);
+	v.Set("result", (int)d->m_eResult);
 	return v.value;
 }
 
 vdynamic *CallbackHandler::EncodeItemInstalled(ItemInstalled_t *d) {
 	HLValue v;
+	v.Set("appId", d->m_unAppID);
 	v.Set("file", d->m_nPublishedFileId);
+	return v.value;
+}
+
+vdynamic *CallbackHandler::EncodeSubscribedItemsListChanged(UserSubscribedItemsListChanged_t *d) {
+	HLValue v;
+	v.Set("appId", d->m_nAppID);
 	return v.value;
 }
 
@@ -167,6 +176,35 @@ HL_PRIM CClosureCallResult<GetAppDependenciesResult_t>* HL_NAME(get_app_dependen
 	return m_call;
 }
 
+HL_PRIM void HL_NAME(start_playtime_tracking)(varray *fileIDs){
+	if (!CheckInit()) return;
+
+	PublishedFileId_t * pvecPublishedFileID = new PublishedFileId_t[fileIDs->size];
+	vuid *ids = hl_aptr(fileIDs, vuid);
+	for (int i = 0; i < fileIDs->size; i++)
+		pvecPublishedFileID[i] = ids[i] ? hl_to_uint64(ids[i]) : 0;
+
+	SteamAPICall_t result = SteamUGC()->StartPlaytimeTracking(pvecPublishedFileID, fileIDs->size);
+	delete[] pvecPublishedFileID;
+}
+
+HL_PRIM void HL_NAME(stop_playtime_tracking)(varray *fileIDs){
+	if (!CheckInit()) return;
+
+	PublishedFileId_t * pvecPublishedFileID = new PublishedFileId_t[fileIDs->size];
+	vuid *ids = hl_aptr(fileIDs, vuid);
+	for (int i = 0; i < fileIDs->size; i++)
+		pvecPublishedFileID[i] = ids[i] ? hl_to_uint64(ids[i]) : 0;
+
+	SteamAPICall_t result = SteamUGC()->StopPlaytimeTracking(pvecPublishedFileID, fileIDs->size);
+	delete[] pvecPublishedFileID;
+}
+
+HL_PRIM void HL_NAME(stop_playtime_tracking_for_all_items)(){
+	if (!CheckInit()) return;
+	SteamAPICall_t result = SteamUGC()->StopPlaytimeTrackingForAllItems();
+}
+
 DEFINE_PRIM(_ARR, get_subscribed_items, _NO_ARG);
 DEFINE_PRIM(_I32, get_item_state, _UID);
 DEFINE_PRIM(_BOOL, get_item_download_info, _UID _REF(_F64) _REF(_F64));
@@ -178,6 +216,9 @@ DEFINE_PRIM(_CRESULT, delete_item, _UID _CALLB(_I32));
 DEFINE_PRIM(_CRESULT, add_app_dependency, _UID _I32 _CALLB(_I32));
 DEFINE_PRIM(_CRESULT, remove_app_dependency, _UID _I32 _CALLB(_I32));
 DEFINE_PRIM(_CRESULT, get_app_dependencies, _UID _CALLB(_DYN));
+DEFINE_PRIM(_VOID, start_playtime_tracking, _ARR);
+DEFINE_PRIM(_VOID, stop_playtime_tracking, _ARR);
+DEFINE_PRIM(_VOID, stop_playtime_tracking_for_all_items, _NO_ARG);
 
 //-----------------------------------------------------------------------------------------------------------
 // UGC QUERY
@@ -403,6 +444,7 @@ static void on_item_created(vclosure *c, CreateItemResult_t *result, bool error)
 		HLValue v;
 		v.Set("id", result->m_nPublishedFileId);
 		v.Set("userNeedsLegalAgreement", result->m_bUserNeedsToAcceptWorkshopLegalAgreement);
+		v.Set("result", result->m_eResult);
 		dyn_call_result(c, v.value, error);
 	}
 	else {
@@ -424,18 +466,15 @@ HL_PRIM vuid HL_NAME(ugc_item_start_update)(int id, vuid itemID) {
 }
 
 static void on_item_updated(vclosure *c, SubmitItemUpdateResult_t *result, bool error) {
-	if (!error && result->m_eResult == k_EResultOK) {
-		vdynamic d;
-		d.t = &hlt_bool;
-		d.v.b = result->m_bUserNeedsToAcceptWorkshopLegalAgreement;
-		dyn_call_result(c, &d, error);
-	}
-	else {
-		vdynamic d;
-		d.t = &hlt_i32;
-		d.v.i = result->m_eResult;
-		dyn_call_result(c, &d, true);
-	}
+	HLValue v;
+
+	v.Set("userNeedsLegalAgreement", result->m_bUserNeedsToAcceptWorkshopLegalAgreement);
+	v.Set("result", result->m_eResult);
+	
+	if (!error && result->m_eResult != k_EResultOK)
+		error = true;
+
+	dyn_call_result(c, v.value, error);
 }
 
 HL_PRIM CClosureCallResult<SubmitItemUpdateResult_t>* HL_NAME(ugc_item_submit_update)(vuid updateHandle, vbyte *changeNotes, vclosure *closure){
@@ -503,7 +542,7 @@ HL_PRIM bool HL_NAME(ugc_item_set_preview_image)(vuid updateHandle, vbyte *path)
 
 DEFINE_PRIM(_CRESULT, ugc_item_create, _I32 _CALLB(_DYN));
 DEFINE_PRIM(_UID, ugc_item_start_update, _I32 _UID);
-DEFINE_PRIM(_CRESULT, ugc_item_submit_update, _UID _BYTES _CALLB(_BOOL));
+DEFINE_PRIM(_CRESULT, ugc_item_submit_update, _UID _BYTES _CALLB(_DYN));
 DEFINE_PRIM(_BOOL, ugc_item_set_update_language, _UID _BYTES);
 DEFINE_PRIM(_BOOL, ugc_item_set_title, _UID _BYTES);
 DEFINE_PRIM(_BOOL, ugc_item_set_description, _UID _BYTES);

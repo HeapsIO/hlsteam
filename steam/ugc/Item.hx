@@ -14,8 +14,9 @@ enum ItemState {
 class Item {
 
 	public var id : UID;
-	public static var downloadedCallbacks = new Array<Item->Void>();
+	public static var downloadedCallbacks = new Array<Item->Int->Void>();
 	public static var installedCallbacks = new Array<Item->Void>();
+	public static dynamic function subscribedItemsListChanged() {}
 
 	public static function fromInt( i : Int ){
 		var b = haxe.io.Bytes.alloc(8);
@@ -23,36 +24,67 @@ class Item {
 		return new Item(steam.UID.fromBytes(b));
 	}
 
-	public static function init( onDownloaded : Item -> Void, onInstalled : Item -> Void ){
+	public static function init( onDownloaded : ( item:Item, result:Int ) -> Void, onInstalled : Item -> Void ){
 		downloadedCallbacks.push(onDownloaded);
 		installedCallbacks.push(onInstalled);
-		Api.registerGlobalEvent(3400 + 6, function(data:{file:UID}){
+		Api.registerGlobalEvent(3400 + 6, function(data:{appId:Int, file:UID, result:Int}){
+			if (data.appId != Api.appId)
+				return;
+
 			var item = new Item(data.file);
 			for( callback in downloadedCallbacks ){
-				callback(item);
+				callback(item, data.result);
 			}
 		});
-		Api.registerGlobalEvent(3400 + 5, function(data:{file:UID}){
+		Api.registerGlobalEvent(3400 + 5, function(data:{appId:Int, file:UID}){
+			if (data.appId != Api.appId)
+				return;
+
 			var item = new Item(data.file);
 			for( callback in installedCallbacks ){
 				callback(item);
 			}
 		});
+
+		Api.registerGlobalEvent(3400 + 18, function(data:{appId:Int}){
+			if (data.appId != Api.appId)
+				return;
+
+			subscribedItemsListChanged();
+		});
 	}
 
-	public static function create( appId : Int, cb : Null<Item> -> Bool -> Void ){
+	public static function create( appId : Int, cb : ( id:Null<Item>, needsAgreement:Bool, result:Int ) -> Void ){
 		ugc_item_create(appId,function(obj, error){
 			if( error ){
-				cb(null,false);
+				cb(null, false, obj.result);
 				return;
 			}
-			cb(new Item(obj.id), obj.userNeedsLegalAgreement);
+			cb(new Item(obj.id), obj.userNeedsLegalAgreement, obj.result);
 		});
 	}
 
 	public static function listSubscribed() : Array<Item> {
 		var a = get_subscribed_items();
 		return a == null ? null : [for( it in a ) new Item(it)];
+	}
+
+	public static function startPlaytimeTracking(ids:Array<Item>) {
+		var a = new hl.NativeArray(ids.length);
+		for( i in 0...ids.length )
+			a[i] = ids[i].id;
+		start_playtime_tracking(a);
+	}
+
+	public static function stopPlaytimeTracking(ids:Array<Item>) {
+		var a = new hl.NativeArray(ids.length);
+		for( i in 0...ids.length )
+			a[i] = ids[i].id;
+		stop_playtime_tracking(a);
+	}
+
+	public static function stopPlaytimeTrackingForAllItems() {
+		stop_playtime_tracking_for_all_items();
 	}
 
 	inline function new( b : UID ){
@@ -166,6 +198,15 @@ class Item {
 	
 	static function get_app_dependencies( item : UID, cb : Callback<Dynamic> ) : AsyncCall {
 		return null;
+	}
+
+	static function start_playtime_tracking( ids : hl.NativeArray<UID> ) : Void {
+	}
+
+	static function stop_playtime_tracking( ids : hl.NativeArray<UID> ) : Void {
+	}
+
+	static function stop_playtime_tracking_for_all_items() : Void {
 	}
 
 }
