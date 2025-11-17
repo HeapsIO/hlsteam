@@ -17,7 +17,8 @@ SDK_BIN_DIR = sdk/redistributable_bin/$(OS)$(ARCH)
 LFLAGS = -lhl -lsteam_api -lstdc++ -L $(SDK_BIN_DIR)
 
 SRC = native/cloud.o native/common.o native/controller.o native/friends.o native/gameserver.o \
-	native/matchmaking.o native/networking.o native/stats.o native/ugc.o
+	native/matchmaking.o native/networking.o native/stats.o native/ugc.o native/timeline.o
+
 
 all: ${SRC}
 	${CC} ${CFLAGS} -shared -o steam.hdll ${SRC} ${LFLAGS}
