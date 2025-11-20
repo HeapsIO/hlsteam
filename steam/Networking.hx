@@ -32,6 +32,14 @@ typedef NetworkSessionData = {
 	var remotePort : Int;
 }
 
+private typedef ThreadData = {
+	var consumed : Int;
+	var disposed : Int;
+	var users : Array<UID>;
+	var length : Array<Int>;
+	var lock : sys.thread.Mutex;
+}
+
 @:hlNative("steam")
 class Networking {
 
@@ -40,6 +48,15 @@ class Networking {
 	static var connections : Map<String,UID> = new Map();
 	static var buffer : hl.Bytes = null;
 	static var bufferSize = 0;
+
+	public static var USE_MULTITHREAD(default,set) : Bool;
+
+	static function set_USE_MULTITHREAD(b) {
+		if( USE_MULTITHREAD == b ) return b;
+		if( initDone ) throw "You cannot change Mulithread after init";
+		USE_MULTITHREAD = b;
+		return b;
+	}
 
 	public static function startP2P( napi : NetworkApi ) {
 		api = napi;
@@ -64,7 +81,12 @@ class Networking {
 				api.onConnectionError(User.fromUID(data.uid), data.error);
 		});
 
-		haxe.MainLoop.add(checkP2PMessage);
+		if( USE_MULTITHREAD ) {
+			var t : ThreadData = { consumed : 0, disposed : 0, users : [], length : [], lock : new sys.thread.Mutex() };
+			haxe.MainLoop.add(checkP2PMain.bind(t));
+			sys.thread.Thread.create(threadLoop.bind(t));
+		} else
+			haxe.MainLoop.add(checkP2PMessage);
 	}
 
 	static function checkP2PMessage() {
@@ -91,6 +113,69 @@ class Networking {
 			var uid = read_p2p_packet(buffer, bufferSize, len, 0);
 			if( uid == null ) continue;
 			api.onData(User.fromUID(uid), buffer.toBytes(len));
+		}
+	}
+
+	static function threadLoop( t : ThreadData ) {
+		try {
+			var len = 0;
+			var pos = 0;
+			while( true ) {
+				if( api != null ) {
+					while( true ) {
+						var result = is_p2p_packet_available(len, 0);
+						if( !result )
+							break;
+						if( len + pos > bufferSize ) {
+							bufferSize = len + pos;
+							var newBuf = new hl.Bytes(bufferSize);
+							newBuf.blit(0, buffer, 0, pos);
+							buffer = newBuf;
+						}
+						var uid = read_p2p_packet(buffer.offset(pos), bufferSize - pos, len, 0);
+						if( uid == null ) continue;
+						pos += len;
+						t.lock.acquire();
+						if( t.disposed > 0 ) {
+							buffer.blit(0, buffer, t.disposed, pos - t.disposed);
+							pos -= t.disposed;
+							t.consumed -= t.disposed;
+							t.disposed = 0;
+						}
+						t.length.push(len);
+						t.users.push(uid);
+						t.lock.release();
+					}
+				}
+				Sys.sleep(1/30);
+			}
+		} catch( e : Dynamic ) {
+			var flags = new haxe.EnumFlags<hl.UI.DialogFlags>();
+			flags.set(IsError);
+			hl.UI.dialog("Error", "An error occured in network layer, Steam can no longer be reached.\n("+Std.string(e)+")", flags);
+			Sys.exit(1);
+		}
+	}
+
+	static function checkP2PMain( t : ThreadData ) {
+		if( api == null ) return;
+		static var tmpBytes = haxe.io.Bytes.alloc(1);
+		while( t.users.length > 0 ) {
+			t.lock.acquire();
+			var u = t.users.shift();
+			var len = t.length.shift();
+			var buffer = buffer; // keep for GC - if expanded on server
+			@:privateAccess tmpBytes.b = buffer.offset(t.consumed);
+			@:privateAccess tmpBytes.length = len;
+			t.disposed = 0; // prevent any offset/discard
+			t.consumed += len; // store in case of exception in onData
+			t.lock.release();
+			api.onData(User.fromUID(u), tmpBytes);
+		}
+		if( t.consumed > 0 && t.disposed != t.consumed ) {
+			t.lock.acquire();
+			t.disposed = t.consumed;
+			t.lock.release();
 		}
 	}
 
