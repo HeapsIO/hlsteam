@@ -192,7 +192,8 @@ class Networking {
 			if( !user.p2pcnx ) return;
 			user.p2pcnx = false;
 		}
-		close_p2p_session(user.uid);
+		// we need to delay the session close so some pending packets are delivered
+		haxe.Timer.delay(close_p2p_session.bind(user.uid),100);
 		connections.remove(user.uid.toString());
 	}
 
