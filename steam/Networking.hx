@@ -193,7 +193,7 @@ class Networking {
 			user.p2pcnx = false;
 		}
 		// we need to delay the session close so some pending packets are delivered
-		haxe.Timer.delay((u) -> if( !user.p2pnx ) close_p2p_session(user.uid),100);
+		haxe.Timer.delay(() -> if( @:privateAccess !user.p2pcnx ) close_p2p_session(user.uid),100);
 		connections.remove(user.uid.toString());
 	}
 
