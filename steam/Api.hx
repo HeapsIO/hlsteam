@@ -61,6 +61,7 @@ class Api
 	// User-settable Callbacks
 
 	public static var onOverlay : Bool -> Void;
+	public static var onNewUrlLaunchParameters : Void -> Void;
 
 	/**
 	 * @param appId_	Your Steam APP ID (the numbers on the end of your store page URL - store.steampowered.com/app/XYZ)
@@ -90,6 +91,12 @@ class Api
 				cb(data.result == 1);
 				authTicketCallbacks.remove(data.authTicket);
 			}
+		});
+
+		// NewUrlLaunchParameters_t
+		registerGlobalEvent(1000 + 14, function(data:{ok:Bool}) {
+			if ( onNewUrlLaunchParameters != null )
+				onNewUrlLaunchParameters();
 		});
 
 		// if we get this far, the dlls loaded ok and we need Steam to init.
@@ -198,6 +205,16 @@ class Api
 
 	public static function getCurrentGameLanguage():String {
 		var l = _GetCurrentGameLanguage();
+		return l==null ? null : @:privateAccess String.fromUTF8(l);
+	}
+
+	public static function getLaunchCommandLine():String {
+		var l = _GetLaunchCommandLine();
+		return l==null ? null : @:privateAccess String.fromUTF8(l);
+	}
+
+	public static function getLaunchQueryParam(query:String):String {
+		var l = _GetLaunchQueryParam(@:privateAccess query.toUtf8());
 		return l==null ? null : @:privateAccess String.fromUTF8(l);
 	}
 
