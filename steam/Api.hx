@@ -92,6 +92,15 @@ class Api
 			}
 		});
 
+		// GetTicketForWebApiResponse_t
+		registerGlobalEvent(100 + 68, function(data:{authTicket:Int, result:Int, length:Int, data:hl.Bytes}){
+			var cb = authTicketForWebApiCallbacks.get(data.authTicket);
+			if( cb !=null ){
+				cb(data.result, data.data.toBytes(data.length));
+				authTicketForWebApiCallbacks.remove(data.authTicket);
+			}
+		});
+
 		// if we get this far, the dlls loaded ok and we need Steam to init.
 		// otherwise, we're trying to run the Steam version without the Steam client
 		active = _Init(steamWrap_onEvent, onGlobalEvent);
@@ -410,6 +419,23 @@ class Api
 		return ticket.toBytes(size);
 	}
 
+	public static function getAuthTicketForWebApi(identity:String, ?onReady ) {
+		var authTicket = _GetAuthTicketForWebApi(@:privateAccess identity.toUtf8());
+		if( authTicket == 0 )
+			return;
+		if( onReady != null ){
+			authTicketForWebApiCallbacks.set(authTicket, onReady);
+			// Timeout
+			haxe.Timer.delay(function(){
+				var cb = authTicketForWebApiCallbacks.get(authTicket);
+				if( cb != null ){
+					cb(-1, null);
+					authTicketForWebApiCallbacks.remove(authTicket);
+				}
+			}, 15000); //15sec
+		}
+	}
+
 	public static function getEncryptedAppTicket(data : haxe.io.Bytes, onReady : haxe.io.Bytes->Void ) : Void {
 		var hlb = data != null ? hl.Bytes.fromBytes(data) : null;
 		var len = data != null ? data.length : 0;
@@ -539,6 +565,7 @@ class Api
 	@:hlNative("steam","is_steam_running") private static function _IsSteamRunning() : Bool { return false; }
 	@:hlNative("steam","get_current_game_language") private static function _GetCurrentGameLanguage() : hl.Bytes { return null; }
 	@:hlNative("steam","get_auth_ticket") private static function _GetAuthTicket( size : hl.Ref<Int>, authTicket : hl.Ref<Int> ) : hl.Bytes { return null; }
+	@:hlNative("steam","get_auth_ticket_for_web_api") private static function _GetAuthTicketForWebApi(identity:hl.Bytes) : Int { return 0; };
 	@:hlNative("?steam","request_encrypted_app_ticket") private static function _RequestEncryptedAppTicket( data : hl.Bytes, size : Int, encryptedAppTicket : (hl.Bytes, Int) -> Void ) : Void { return; }
 	@:hlNative("steam","open_overlay") private static function _OpenOverlay( url : hl.Bytes ) : Bool { return false; }
 	@:hlNative("steam","get_current_beta_name") private static function _GetCurrentBetaName() : hl.Bytes { return null; }
