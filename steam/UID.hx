@@ -20,4 +20,10 @@ abstract UID(hl.Bytes) {
 		if( bytes.length != 8 ) throw "Invalid UID";
 		return new UID(@:privateAccess bytes.b);
 	}
+	public static function fromInt64( v:haxe.Int64 ) {
+		var b = new hl.Bytes(8);
+		b.setI32(0, v.low);
+		b.setI32(4, v.high);
+		return new UID(b);
+	}
 }

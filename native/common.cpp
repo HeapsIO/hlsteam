@@ -257,6 +257,11 @@ HL_PRIM bool HL_NAME(is_subscribed_from_free_weekend)()
 	return SteamApps()->BIsSubscribedFromFreeWeekend();
 }
 
+HL_PRIM uint32 HL_NAME(get_earliest_purchase_unix_time)(int app_id)
+{
+	return SteamApps()->GetEarliestPurchaseUnixTime(app_id);
+}
+
 class EncryptedAppTicketRequest
 {
 private:
@@ -337,6 +342,14 @@ HL_PRIM void HL_NAME(request_encrypted_app_ticket)(vbyte* data, int size, vclosu
 	EncryptedAppTicketRequest *request = new EncryptedAppTicketRequest(cb, data, size);
 }
 
+vdynamic *CallbackHandler::EncodeMicroTxnAuthorization(MicroTxnAuthorizationResponse_t *d) {
+	HLValue v;
+	v.Set("appId", d->m_unAppID);
+	v.Set("orderId", d->m_ulOrderID);
+	v.Set("authorized", d->m_bAuthorized);
+	return v.value;
+}
+
 DEFINE_PRIM(_UID, get_steam_id, _NO_ARG);
 DEFINE_PRIM(_BOOL, restart_app_if_necessary, _I32);
 DEFINE_PRIM(_BOOL, is_overlay_enabled, _NO_ARG);
@@ -356,3 +369,4 @@ DEFINE_PRIM(_BOOL, is_app_owned, _I32);
 DEFINE_PRIM(_BOOL, is_subscribed, _NO_ARG);
 DEFINE_PRIM(_BOOL, is_subscribed_from_family_sharing, _NO_ARG);
 DEFINE_PRIM(_BOOL, is_subscribed_from_free_weekend, _NO_ARG);
+DEFINE_PRIM(_I32, get_earliest_purchase_unix_time, _I32);

@@ -84,34 +84,34 @@ HL_PRIM void HL_NAME(gameserver_setup)( vclosure *onGlobalEvent ){
 	hl_add_root(&globalEvent);
 }
 
-bool HL_NAME(gameserver_init)( int ip, int port, int gameport, int queryport, int serverMode, char *version ) {
+HL_PRIM bool HL_NAME(gameserver_init)( int ip, int port, int gameport, int queryport, int serverMode, char *version ) {
 	return SteamGameServer_Init(ip,gameport,queryport,(EServerMode)serverMode, version);
 }
 
-void HL_NAME(gameserver_runcallbacks)() {
+HL_PRIM void HL_NAME(gameserver_runcallbacks)() {
 	SteamGameServer_RunCallbacks();
 }
 
-void HL_NAME(gameserver_shutdown)() {
+HL_PRIM void HL_NAME(gameserver_shutdown)() {
 	SteamGameServer_Shutdown();
 }
 
-void HL_NAME(gameserver_logon_anonymous)() {
+HL_PRIM void HL_NAME(gameserver_logon_anonymous)() {
 	SteamGameServer()->LogOnAnonymous();
 }
 
-void HL_NAME(gameserver_enable_heartbeats)( bool b ) {
+HL_PRIM void HL_NAME(gameserver_enable_heartbeats)( bool b ) {
 	SteamGameServer()->SetAdvertiseServerActive(b);
 }
 
-void HL_NAME(gameserver_config)( char *modDir, char *product, char *desc ) {
+HL_PRIM void HL_NAME(gameserver_config)( char *modDir, char *product, char *desc ) {
 	SteamGameServer()->SetModDir(modDir);
 	SteamGameServer()->SetProduct(product);
 	SteamGameServer()->SetGameDescription(desc);
 	SteamGameServer()->SetDedicatedServer(true);
 }
 
-void HL_NAME(gameserver_info)( int maxPlayers, bool password, char *serverName, int botCount, char *mapName ) {
+HL_PRIM void HL_NAME(gameserver_info)( int maxPlayers, bool password, char *serverName, int botCount, char *mapName ) {
 	SteamGameServer()->SetMaxPlayerCount(maxPlayers);
 	SteamGameServer()->SetPasswordProtected(password);
 	SteamGameServer()->SetServerName(serverName);
@@ -119,11 +119,11 @@ void HL_NAME(gameserver_info)( int maxPlayers, bool password, char *serverName, 
 	SteamGameServer()->SetMapName(mapName);
 }
 
-vuid HL_NAME(gameserver_get_steam_id)() {
+HL_PRIM vuid HL_NAME(gameserver_get_steam_id)() {
 	return hl_of_uid(SteamGameServer()->GetSteamID());
 }
 
-int HL_NAME(gameserver_get_public_ip)() {
+HL_PRIM int HL_NAME(gameserver_get_public_ip)() {
 	return (int)SteamGameServer()->GetPublicIP().m_unIPv4;
 }
 
