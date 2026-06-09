@@ -60,6 +60,14 @@ HL_PRIM void HL_NAME(activate_overlay_store)( int appid, int flag ) {
 	SteamFriends()->ActivateGameOverlayToStore((AppId_t)appid,(EOverlayToStoreFlag)flag);
 }
 
+HL_PRIM bool HL_NAME(set_rich_presence)( vbyte *pchKey, vbyte *pchValue ) {
+	return SteamFriends()->SetRichPresence((char*)pchKey, (char*)pchValue);
+}
+
+HL_PRIM void HL_NAME(clear_rich_presence)() {
+	SteamFriends()->ClearRichPresence();
+}
+
 DEFINE_PRIM(_BYTES, get_user_name, _UID);
 DEFINE_PRIM(_BYTES, get_user_avatar, _UID _I32 _REF(_I32) _REF(_I32));
 DEFINE_PRIM(_BOOL, request_user_information, _UID _BOOL);
@@ -67,4 +75,5 @@ DEFINE_PRIM(_ARR, get_friends, _I32);
 DEFINE_PRIM(_BOOL, has_friend, _UID _I32);
 DEFINE_PRIM(_VOID, activate_overlay_user, _BYTES _UID);
 DEFINE_PRIM(_VOID, activate_overlay_store, _I32 _I32);
-
+DEFINE_PRIM(_BOOL, set_rich_presence, _BYTES _BYTES);
+DEFINE_PRIM(_VOID, clear_rich_presence, _NO_ARG);

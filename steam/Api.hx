@@ -51,15 +51,12 @@ class Api
 	 */
 	public static var controllers(default, null):Controller;
 
-	// Deprecated User-settable callbacks:
+	// User-settable callbacks:
 
 	public static var whenGamepadTextInputDismissed:String->Void;
 	public static var whenAchievementStored:String->Void;
 	public static var whenLeaderboardScoreDownloaded:LeaderboardScore->Void;
 	public static var whenLeaderboardScoreUploaded:LeaderboardScore->Void;
-
-	// User-settable Callbacks
-
 	public static var onOverlay : Bool -> Void;
 
 	/**
@@ -545,6 +542,7 @@ class Api
 	@:hlNative("?steam","is_subscribed") public static function isSubscribed() : Bool { return false; }
 	@:hlNative("?steam","is_subscribed_from_family_sharing") public static function isSubscribedFromFamilySharing() : Bool { return false; }
 	@:hlNative("?steam","is_subscribed_from_free_weekend") public static function isSubscribedFromFreeWeekend() : Bool { return false; }
+	@:hlNative("?steam","get_earliest_purchase_unix_time") public static function getEarliestPurchaseUnixTime( appId : Int ) : Int { return 0; }
 }
 
 class LeaderboardScore {
