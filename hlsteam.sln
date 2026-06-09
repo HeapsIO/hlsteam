@@ -11,10 +11,6 @@ Global
 		Debug|x64 = Debug|x64
 		Release|Win32 = Release|Win32
 		Release|x64 = Release|x64
-		ReleaseVS2013|Win32 = ReleaseVS2013|Win32
-		ReleaseVS2013|x64 = ReleaseVS2013|x64
-		ReleaseVS2017|Win32 = ReleaseVS2017|Win32
-		ReleaseVS2017|x64 = ReleaseVS2017|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{790A6ECF-AEBA-48EB-BB22-6420079DFAFC}.Debug|Win32.ActiveCfg = Debug|Win32
@@ -25,14 +21,6 @@ Global
 		{790A6ECF-AEBA-48EB-BB22-6420079DFAFC}.Release|Win32.Build.0 = Release|Win32
 		{790A6ECF-AEBA-48EB-BB22-6420079DFAFC}.Release|x64.ActiveCfg = Release|x64
 		{790A6ECF-AEBA-48EB-BB22-6420079DFAFC}.Release|x64.Build.0 = Release|x64
-		{790A6ECF-AEBA-48EB-BB22-6420079DFAFC}.ReleaseVS2013|Win32.ActiveCfg = ReleaseVS2013|Win32
-		{790A6ECF-AEBA-48EB-BB22-6420079DFAFC}.ReleaseVS2013|Win32.Build.0 = ReleaseVS2013|Win32
-		{790A6ECF-AEBA-48EB-BB22-6420079DFAFC}.ReleaseVS2013|x64.ActiveCfg = ReleaseVS2013|x64
-		{790A6ECF-AEBA-48EB-BB22-6420079DFAFC}.ReleaseVS2013|x64.Build.0 = ReleaseVS2013|x64
-		{790A6ECF-AEBA-48EB-BB22-6420079DFAFC}.ReleaseVS2017|Win32.ActiveCfg = ReleaseVS2017|Win32
-		{790A6ECF-AEBA-48EB-BB22-6420079DFAFC}.ReleaseVS2017|Win32.Build.0 = ReleaseVS2017|Win32
-		{790A6ECF-AEBA-48EB-BB22-6420079DFAFC}.ReleaseVS2017|x64.ActiveCfg = ReleaseVS2017|x64
-		{790A6ECF-AEBA-48EB-BB22-6420079DFAFC}.ReleaseVS2017|x64.Build.0 = ReleaseVS2017|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
