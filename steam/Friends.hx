@@ -92,11 +92,22 @@ class Friends {
 	public static function activateOverlay( overlay : OverlayKind, ?uid : UID ) {
 		activate_overlay_user( overlay == None ? null : @:privateAccess overlay.toString().toUtf8(), uid);
 	}
-	
+
 	public static function activateOverlayStore( appId : Int, flags : OverlayToStoreFlag ) : Void {}
+
+	/**
+		Key `steam_display` requires localized token as value, see https://partner.steamgames.com/doc/api/ISteamFriends#richpresencelocalization
+		Set `value` to empty or null to remove the key.
+	**/
+	public static function setRichPresence( key : String, value : Null<String> ) : Bool {
+		return @:privateAccess set_rich_presence(key.toUtf8(), value == null ? null : value.toUtf8());
+	}
+
+	public static function clearRichPresence() : Void {}
 
 	static function get_friends( flags : FriendFlags ) : hl.NativeArray<UID> { return null; }
 	static function has_friend( uid : UID, flags : FriendFlags ) : Bool { return false; }
 	static function activate_overlay_user( overlay : hl.Bytes, uid : UID ) : Void {}
+	static function set_rich_presence( pchKey : hl.Bytes, pchValue : hl.Bytes ) : Bool { return false; }
 
 }
