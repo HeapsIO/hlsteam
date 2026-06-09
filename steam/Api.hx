@@ -51,15 +51,12 @@ class Api
 	 */
 	public static var controllers(default, null):Controller;
 
-	// Deprecated User-settable callbacks:
+	// User-settable callbacks:
 
 	public static var whenGamepadTextInputDismissed:String->Void;
 	public static var whenAchievementStored:String->Void;
 	public static var whenLeaderboardScoreDownloaded:LeaderboardScore->Void;
 	public static var whenLeaderboardScoreUploaded:LeaderboardScore->Void;
-
-	// User-settable Callbacks
-
 	public static var onOverlay : Bool -> Void;
 
 	/**
