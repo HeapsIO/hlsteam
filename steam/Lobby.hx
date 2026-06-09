@@ -177,6 +177,10 @@ class Lobby {
 		return v;
 	}
 
+	public function setLobbyType(v) {
+		set_lobby_type(uid, v);
+	}
+
 	// --- HL stubs ----
 
 	static function request_lobby_data( uid : UID ) {
@@ -249,6 +253,9 @@ class Lobby {
 	}
 
 	static function set_lobby_member_limit( uid : UID, count : Int ) {
+	}
+
+	static function set_lobby_type( uid : UID, count : Matchmaking.LobbyKind ) {
 	}
 
 }

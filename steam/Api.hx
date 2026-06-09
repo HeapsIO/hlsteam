@@ -61,6 +61,7 @@ class Api
 	// User-settable Callbacks
 
 	public static var onOverlay : Bool -> Void;
+	public static var onGameRichPresenceJoinRequested: UID -> String -> Void;
 
 	/**
 	 * @param appId_	Your Steam APP ID (the numbers on the end of your store page URL - store.steampowered.com/app/XYZ)
@@ -92,6 +93,24 @@ class Api
 			}
 		});
 
+		// SteamNetworkingMessagesSessionRequest_t
+		registerGlobalEvent(1250 + 1, function(data:{identity: SteamNetworkingIdentity}){
+			if( NetworkingMessages.onSessionRequest != null )
+				NetworkingMessages.onSessionRequest(data.identity);
+		});
+
+		// SteamNetworkingMessagesSessionFailed_t
+		registerGlobalEvent(1250 + 2, function(data:{info: SteamNetConnectionInfo}){
+			// if( NetworkingMessages.onSessionRequest != null )
+			// 	NetworkingMessages.onSessionRequest(data.info);
+		});
+
+		// GameRichPresenceJoinRequested_t
+		registerGlobalEvent(300 + 37, function(data:{friend: UID, connect:hl.Bytes}){
+			if( onGameRichPresenceJoinRequested != null )
+				onGameRichPresenceJoinRequested(data.friend, @:privateAccess String.fromUTF8(data.connect));
+		});
+
 		// if we get this far, the dlls loaded ok and we need Steam to init.
 		// otherwise, we're trying to run the Steam version without the Steam client
 		active = _Init(steamWrap_onEvent, onGlobalEvent);
@@ -114,6 +133,7 @@ class Api
 
 	static var globalEvents = new Map<Int,Dynamic->Void>();
 	static var authTicketCallbacks : Map<Int, Bool->Void> = new Map();
+	static var authTicketForWebApiCallbacks : Map<Int, (result:Int, data:haxe.io.Bytes)->Void> = new Map();
 
 	@:noComplete public static function registerGlobalEvent( event : Int, callb : Dynamic -> Void ) {
 		globalEvents.set(event, callb);
@@ -538,6 +558,8 @@ class Api
 	@:hlNative("?steam","is_steam_running_on_steam_deck") private static function _IsSteamRunningOnSteamDeck() : Bool { return false; }
 	@:hlNative("steam","is_steam_running") private static function _IsSteamRunning() : Bool { return false; }
 	@:hlNative("steam","get_current_game_language") private static function _GetCurrentGameLanguage() : hl.Bytes { return null; }
+	@:hlNative("?steam","get_launch_command_line") private static function _GetLaunchCommandLine() : hl.Bytes { return null; }
+	@:hlNative("?steam","get_launch_query_param") private static function _GetLaunchQueryParam( name : hl.Bytes ) : hl.Bytes { return null; }
 	@:hlNative("steam","get_auth_ticket") private static function _GetAuthTicket( size : hl.Ref<Int>, authTicket : hl.Ref<Int> ) : hl.Bytes { return null; }
 	@:hlNative("?steam","request_encrypted_app_ticket") private static function _RequestEncryptedAppTicket( data : hl.Bytes, size : Int, encryptedAppTicket : (hl.Bytes, Int) -> Void ) : Void { return; }
 	@:hlNative("steam","open_overlay") private static function _OpenOverlay( url : hl.Bytes ) : Bool { return false; }

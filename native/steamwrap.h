@@ -16,7 +16,9 @@
 #include <steam/isteamappticket.h>
 
 typedef vbyte *		vuid;
+typedef vbyte *		steamnetid;
 #define _UID		_BYTES
+#define _STEAMNETID	_BYTES
 #define hlt_uid		hlt_bytes
 
 void dyn_call_result( vclosure *c, vdynamic *p, bool error );
@@ -25,6 +27,8 @@ CSteamID hl_to_uid( vuid v );
 vuid hl_of_uid( CSteamID id );
 uint64 hl_to_uint64(vuid v);
 vuid hl_of_uint64(uint64 id);
+SteamNetworkingIdentity hl_to_steamnetid(steamnetid v);
+steamnetid hl_of_steamnetid(SteamNetworkingIdentity v);
 
 template< class T >
 class CClosureCallResult : public CCallResult<CClosureCallResult<T>,T> {
@@ -109,6 +113,9 @@ public:
 	}
 	void Set( const char *name, uint64 uid ) {
 		hl_dyn_setp(value, hl_hash_utf8(name), &hlt_uid, hl_of_uint64(uid));
+	}
+	void Set( const char *name, SteamNetworkingIdentity uid ) {
+		hl_dyn_setp(value, hl_hash_utf8(name), &hlt_uid, hl_of_steamnetid(uid));
 	}
 	void Set( const char *name, uint32 v ) {
 		Set(name,(int)v);
