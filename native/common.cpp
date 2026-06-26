@@ -177,17 +177,22 @@ HL_PRIM bool HL_NAME(is_steam_running)(){
 }
 
 HL_PRIM vbyte *HL_NAME(get_current_game_language)(){
-	if (!CheckInit()) return NULL;
-	return (vbyte*)SteamApps()->GetCurrentGameLanguage();
+	ISteamApps *apps = SteamApps();
+	if (!apps) return NULL;
+	return (vbyte*)apps->GetCurrentGameLanguage();
 }
 
 HL_PRIM bool HL_NAME(is_dlc_installed)( int appid ) {
-	return SteamApps()->BIsDlcInstalled((AppId_t)appid);
+	ISteamApps *apps = SteamApps();
+	if (!apps) return false;
+	return apps->BIsDlcInstalled((AppId_t)appid);
 }
 
 HL_PRIM vbyte *HL_NAME(get_app_install_dir)(int app_id) {
+	ISteamApps *apps = SteamApps();
+	if (!apps) return NULL;
 	vbyte *install_dir = hl_alloc_bytes(1024);
-	int r = SteamApps()->GetAppInstallDir(app_id, (char*)install_dir, 1024);
+	int r = apps->GetAppInstallDir((AppId_t)app_id, (char*)install_dir, 1024);
 	if (r)
 		return install_dir;
 	else
@@ -196,8 +201,9 @@ HL_PRIM vbyte *HL_NAME(get_app_install_dir)(int app_id) {
 
 HL_PRIM vbyte *HL_NAME(get_current_beta_name)() {
 	static char name[1024];
-	if (!CheckInit()) return NULL;
-	if (!SteamApps()->GetCurrentBetaName(name, 1024))
+	ISteamApps *apps = SteamApps();
+	if (!apps) return NULL;
+	if (!apps->GetCurrentBetaName(name, 1024))
 		return NULL;
 	return (vbyte*)name;
 }
@@ -223,7 +229,9 @@ HL_PRIM void HL_NAME(cancel_call_result)( CClosureCallResult<int> *m_call ) {
 
 HL_PRIM bool HL_NAME(is_app_installed)(int app_id)
 {
-	return SteamApps()->BIsAppInstalled(app_id);
+	ISteamApps *apps = SteamApps();
+	if (!apps) return false;
+	return apps->BIsAppInstalled((AppId_t)app_id);
 }
 
 HL_PRIM bool HL_NAME(is_app_owned)(int app_id)
@@ -244,22 +252,30 @@ HL_PRIM bool HL_NAME(is_app_owned)(int app_id)
 
 HL_PRIM bool HL_NAME(is_subscribed)()
 {
-	return SteamApps()->BIsSubscribed();
+	ISteamApps *apps = SteamApps();
+	if (!apps) return false;
+	return apps->BIsSubscribed();
 }
 
 HL_PRIM bool HL_NAME(is_subscribed_from_family_sharing)()
 {
-	return SteamApps()->BIsSubscribedFromFamilySharing();
+	ISteamApps *apps = SteamApps();
+	if (!apps) return false;
+	return apps->BIsSubscribedFromFamilySharing();
 }
 
 HL_PRIM bool HL_NAME(is_subscribed_from_free_weekend)()
 {
-	return SteamApps()->BIsSubscribedFromFreeWeekend();
+	ISteamApps *apps = SteamApps();
+	if (!apps) return false;
+	return apps->BIsSubscribedFromFreeWeekend();
 }
 
 HL_PRIM uint32 HL_NAME(get_earliest_purchase_unix_time)(int app_id)
 {
-	return SteamApps()->GetEarliestPurchaseUnixTime(app_id);
+	ISteamApps *apps = SteamApps();
+	if (!apps) return 0;
+	return apps->GetEarliestPurchaseUnixTime((AppId_t)app_id);
 }
 
 class EncryptedAppTicketRequest
