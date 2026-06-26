@@ -4,7 +4,8 @@ Simple Haxe wrapper of Steam API for Hashlink.
 
 ### Setup
 
-- Download [Steam SDK](https://partner.steamgames.com/downloads/list) (version: `1.64`)
+- Download [Steam SDK](https://partner.steamgames.com/downloads/list) (version: `1.61` to `1.64`)
+  - Note for SteamDeck: `1.63` is supported by `Proton 10.0-4`. `1.64` may require `Proton 11 (beta)`.
 - Put your Steam SDK in the hlsteam/sdk folder
 - Define `HASHLINK_SRC` env var to point to your `hashlink` directory
 - Compile `steam.hdll`
