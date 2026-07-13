@@ -120,11 +120,15 @@ HL_PRIM void HL_NAME(gameserver_info)( int maxPlayers, bool password, char *serv
 }
 
 HL_PRIM vuid HL_NAME(gameserver_get_steam_id)() {
-	return hl_of_uid(SteamGameServer()->GetSteamID());
+	ISteamGameServer *srv = SteamGameServer();
+	if (!srv) return hl_of_uid(CSteamID());
+	return hl_of_uid(srv->GetSteamID());
 }
 
 HL_PRIM int HL_NAME(gameserver_get_public_ip)() {
-	return (int)SteamGameServer()->GetPublicIP().m_unIPv4;
+	ISteamGameServer *srv = SteamGameServer();
+	if (!srv) return 0;
+	return (int)srv->GetPublicIP().m_unIPv4;
 }
 
 DEFINE_PRIM(_BOOL, gameserver_init, _I32 _I32 _I32 _I32 _I32 _BYTES);
