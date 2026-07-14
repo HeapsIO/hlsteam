@@ -16,8 +16,8 @@ class ItemUpdate {
 		id = updId;
 	}
 
-	public function submit( notes : String, cb : Bool -> Dynamic -> Void ){
-		return ugc_item_submit_update(id,notes == null ? null : @:privateAccess notes.toUtf8(), function(needsAgreement,error) cb(!error,needsAgreement));
+	public function submit( notes : String, cb : ( success:Bool, needsAgreement:Bool, result:Int ) -> Void ){
+		return ugc_item_submit_update(id,notes == null ? null : @:privateAccess notes.toUtf8(), function(v:Dynamic,error) cb(!error,v.needsAgreement,v.result));
 	}
 
 	public function setUpdateLanguage( lang : String ){
@@ -66,7 +66,7 @@ class ItemUpdate {
 	// -- native
 	
 	static function ugc_item_start_update( appId : Int, itemId : UID ) : UID { return null; }
-	static function ugc_item_submit_update( updId : UID, notes : hl.Bytes, cb : Callback<Bool> ) : AsyncCall { return null; }
+	static function ugc_item_submit_update( updId : UID, notes : hl.Bytes, cb : Callback<Dynamic> ) : AsyncCall { return null; }
 	static function ugc_item_set_update_language( updId : UID, lang : hl.Bytes ) : Bool { return false; }
 	static function ugc_item_set_title( updId : UID, title : hl.Bytes ) : Bool { return false; }
 	static function ugc_item_set_description( updId : UID, desc : hl.Bytes ) : Bool { return false; }
