@@ -104,7 +104,15 @@ class Item {
 	public function delete( cb : Int -> Bool -> Void ) {
 		return delete_item(id, cb);
 	}
-	
+
+	public function addDependency( child : Item, cb : Int -> Bool -> Void ) {
+		return add_dependency(id, child.id, cb);
+	}
+
+	public function removeDependency( child : Item, cb : Int -> Bool -> Void ) {
+		return remove_dependency(id, child.id, cb);
+	}
+
 	public function addAppDependency( appId : Int, cb : Int -> Bool -> Void ) {
 		return add_app_dependency(id, appId, cb);
 	}
@@ -153,6 +161,14 @@ class Item {
 	}
 
 	static function delete_item( item : UID, cb : Callback<Int> ) : AsyncCall {
+		return null;
+	}
+
+	static function add_dependency( item : UID, child : UID, cb : Callback<Int> ) : AsyncCall {
+		return null;
+	}
+
+	static function remove_dependency( item : UID, child : UID, cb : Callback<Int> ) : AsyncCall {
 		return null;
 	}
 

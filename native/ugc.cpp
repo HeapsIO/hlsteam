@@ -123,6 +123,32 @@ HL_PRIM CClosureCallResult<DeleteItemResult_t>* HL_NAME(delete_item)(vuid update
 	return m_call;
 }
 
+static void on_ugc_added(vclosure *c, AddUGCDependencyResult_t *result, bool error) {
+	vdynamic d;
+	d.t = &hlt_i32;
+	d.v.i = result->m_eResult;
+	dyn_call_result(c, &d, error);
+}
+
+HL_PRIM CClosureCallResult<AddUGCDependencyResult_t>* HL_NAME(add_dependency)(vuid parentPublishedFile, vuid childPublishedFile, vclosure *closure){
+	if (!CheckInit() || parentPublishedFile == NULL || childPublishedFile == NULL) return NULL;
+	ASYNC_CALL(SteamUGC()->AddDependency(hl_to_uint64(parentPublishedFile), hl_to_uint64(childPublishedFile)), AddUGCDependencyResult_t, on_ugc_added);
+	return m_call;
+}
+
+static void on_ugc_removed(vclosure *c, RemoveUGCDependencyResult_t *result, bool error) {
+	vdynamic d;
+	d.t = &hlt_i32;
+	d.v.i = result->m_eResult;
+	dyn_call_result(c, &d, error);
+}
+
+HL_PRIM CClosureCallResult<RemoveUGCDependencyResult_t>* HL_NAME(remove_dependency)(vuid parentPublishedFile, vuid childPublishedFile, vclosure *closure){
+	if (!CheckInit() || parentPublishedFile == NULL || childPublishedFile == NULL) return NULL;
+	ASYNC_CALL(SteamUGC()->AddDependency(hl_to_uint64(parentPublishedFile), hl_to_uint64(childPublishedFile)), RemoveUGCDependencyResult_t, on_ugc_removed);
+	return m_call;
+}
+
 static void on_app_added(vclosure *c, AddAppDependencyResult_t *result, bool error) {
 	vdynamic d;
 	d.t = &hlt_i32;
@@ -175,6 +201,8 @@ DEFINE_PRIM(_DYN, get_item_install_info, _UID);
 DEFINE_PRIM(_CRESULT, subscribe_item, _UID _CALLB(_UID));
 DEFINE_PRIM(_CRESULT, unsubscribe_item, _UID _CALLB(_UID));
 DEFINE_PRIM(_CRESULT, delete_item, _UID _CALLB(_I32));
+DEFINE_PRIM(_CRESULT, add_dependency, _UID _UID _CALLB(_I32));
+DEFINE_PRIM(_CRESULT, remove_dependency, _UID _UID _CALLB(_I32));
 DEFINE_PRIM(_CRESULT, add_app_dependency, _UID _I32 _CALLB(_I32));
 DEFINE_PRIM(_CRESULT, remove_app_dependency, _UID _I32 _CALLB(_I32));
 DEFINE_PRIM(_CRESULT, get_app_dependencies, _UID _CALLB(_DYN));
